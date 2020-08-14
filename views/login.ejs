@@ -19,7 +19,6 @@
 
 </body>
 
-
 <!-- form를 사용하면 간단하게 전송할 수 있으나 성공했는지 여부 클라이언트에서 확인 할 수를없을 수 있다 -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script>
@@ -28,17 +27,17 @@
         $.ajax({
             url:'/login',//주
             async: true, // async 옵션 -? : false
+            dataType:'json',
             type: 'POST',
             data:{ //data 할때 json으로,
                 email : $("#email").val(),
                 password : $("#password").val()
             },
-            dataType:'json',
-            success:function (data) {
-                alert("success");
-            },
-            error:function (err) {
-                alert("fail");
+            success: function(data) {
+                var data = JSON.parse(data);
+                if(data.status == '200'){
+                    window.location.replace("../");
+                }
             }
         })
     })
