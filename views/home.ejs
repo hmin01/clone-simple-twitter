@@ -8,6 +8,7 @@
 <form method="get">
 <h1>homepage</h1>
     <input id = "btn_login" name ="login" value = "login" type ="button"/>
+    <input id = "btn_register" name ="register" value="register" type ="button">
 </form>
 
 <script>
@@ -18,6 +19,23 @@
             data :'data',
             success: function (data) {
                 location.href="/login";
+            },
+            error: function (err) {
+                alert(err);
+                return false;
+            }
+        })
+    });
+</script>
+
+<script>
+    $("#btn_register").click(function(){
+        $.ajax({
+            url: '/register',
+            type: 'GET',
+            data :'data',
+            success: function (data) {
+                location.href="/register";
             },
             error: function (err) {
                 alert(err);
