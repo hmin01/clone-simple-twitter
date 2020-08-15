@@ -6,29 +6,57 @@
 </head>
 <body>
 <h3>회원정보수정</h3>
-<form action="/update" method="post">
+<form method="post">
     <table>
         <tr>
             <td>이름 : </td>
-            <td><input type="name" name="name"></td>
+            <td><input type="name" value ="<%=name%>" name="name"></td>
         </tr>
         <tr>
             <td>전화 번호 : </td>
-            <td><input type="text" name="phonenumber"></td>
+            <td><input type="text" value ="<%=phonenumber%>" name="phonenumber"></td>
         </tr>
         <tr>
             <td>성별 : </td>
-            <td><input type="text" name="gender"></td>
+            <td><input type="text" value ="<%=gender%>" name="gender"></td>
         </tr>
         <tr>
             <td>프로필 : </td>
-            <td><input type="text" name="profile"></td>
+            <td><input type="text" value ="<%=profile%>" name="profile"></td>
         </tr>
         <tr>
-            <td><input type="submit" value="수정"></td>
+            <td><input type="submit" id ="update" value="수정"></td>
         </tr>
     </table>
 </form>
+
+
+<script>
+    $("#update").click(function(){
+        $.ajax({
+            url:'/update',//주
+            type: 'POST',
+            async: false,
+            dataType :'json',
+            data: {
+                name : $('#name').val(),
+                phonenubmer : $('#phonenumber').val(),
+                gender : $('#gender').val(),
+                profile : $('#profile').val()
+            },
+            success: function (data) {
+                console.log('1234')
+                alert('success');
+            },
+            error: function (err) {
+                alert(data);
+            }
+        });
+    });
+</script>
+
+
+
 
 </body>
 </html>

@@ -5,5 +5,30 @@
 </head>
 <body>
 
-<h1><%=session.email%></h1>
+<h1></h1>
+<form method="post">
+<div>
+    <p><%=email%>반갑습니다.</p>
+    <input type="submit" value = "profile" id="profile"/>
+</div>
+</form>
+
+<script>
+    $("#profile").click(function(){
+        $.ajax({
+            url:'/profile',//주
+            type: 'POST',
+            dataType :'json',
+            data: 'data',
+            success: function (data) {
+                console.log('1234')
+                alert('success');
+            },
+            error: function (err) {
+                alert(data);
+            }
+        });
+    });
+</script>
+
 </body>

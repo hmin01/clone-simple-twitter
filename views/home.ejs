@@ -1,37 +1,30 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
     <title>twitterHome</title>
 </head>
 <body>
-<form action="/home" method="POST">
+<form method="get">
 <h1>homepage</h1>
-    <div>
-        <input id = "profile" name ="profile" type ="button"/>
-    </div>
+    <input id = "btn_login" name ="login" value = "login" type ="button"/>
 </form>
 
-<!-- form를 사용하면 간단하게 전송할 수 있으나 성공했는지 여부 클라이언트에서 확인 할 수를없을 수 있다 -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script>
-
-    $("#profile").click(function(){
+    $("#btn_login").click(function(){
         $.ajax({
-            url:'/profile',//주
-            async: true, // async 옵션 -? : false
-            type: 'POST',
-            data:{ //data 할때 json으로,
-
+            url: '/login',
+            type: 'GET',
+            data :'data',
+            success: function (data) {
+                location.href="/login";
             },
-            dataType:'json',
-            success:function (data) {
-                alert("success");
-            },
-            error:function (err) {
-                alert("fail");
+            error: function (err) {
+                alert(err);
+                return false;
             }
         })
-    })
+    });
 </script>
 
 </body>

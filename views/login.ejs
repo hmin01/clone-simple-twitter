@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-
+    <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
     <title> login </title>
 </head>
 <body>
 
-<form name = "login" method="POST">
+<form method="post">
 <h1>login</h1>
 <div>
     <input id = "email" name="email" type ="email" placeholder="Email"/>
@@ -14,32 +14,33 @@
 <div>
     <input id = "password" name ="password" type ="password" placeholder="password"/>
 </div>
+
 <input type = "submit" value="Login" id ="btnLogin"/>
+
 </form>
-
-</body>
-
 <!-- form를 사용하면 간단하게 전송할 수 있으나 성공했는지 여부 클라이언트에서 확인 할 수를없을 수 있다 -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<script>
 
+<script>
     $("#btnLogin").click(function(){
         $.ajax({
             url:'/login',//주
-            async: true, // async 옵션 -? : false
-            dataType:'json',
             type: 'POST',
-            data:{ //data 할때 json으로,
-                email : $("#email").val(),
-                password : $("#password").val()
+            async: false,
+            dataType :'json',
+            data: {
+                email : $('#email').val(),
+                password : $('#password').val()
             },
-            success: function(data) {
-                var data = JSON.parse(data);
-                if(data.status == '200'){
-                    window.location.replace("../");
-                }
+            success: function (data) {
+                console.log('1234')
+                alert('success');
+            },
+            error: function (err) {
+                alert(data);
             }
-        })
-    })
+        });
+    });
 </script>
+
+</body>
 </html>
