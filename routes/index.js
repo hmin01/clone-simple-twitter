@@ -166,33 +166,35 @@ router.post('/profile', function (req,res,next) {
 
 router.get('/delete', function (req,res,next) {
     var inform = req.session.user;
-    res.render('delete',inform.name);
+    console.log("hihihihi");
+    console.log(inform);
+    res.render('delete',inform);
 });
 
 router.post('/delete', function (req,res,next) {
     var inform = req.session.user;
-    console.log(req.body);
-
     var check = false;
+    console.log("email"+inform.email);
+    console.log("password"+req.body.password);
 
-    connection.query('SELECT password FROM twitterdb.USER where email=?',[inform.email],function (err,result,fields) {
-        if(err){
-            throw err;
-        }
-        else{
-            if(req.body.password === result[0].password){
-                connection.query('DELETE FROM twitterdb.USER WHERE email = ? ',[inform.email], function (err, result, fields){
-                    if(err)throw err;
-                    else {
-                        res.send('<script>alert("삭제 되었습니다");location.href="/home";</script>');
-                    }
-                })
-            }
+    const hashstring = crypto.createHash('sha512').update("CNC").digest('hex');
+    const hashSalt = inform.email + hashstring;
+    var hashpassword = crypto.createHash('sha512').update(req.body.password+hashSalt).digest('hex');
+
+    console.log(hashpassword);
+    if(hashpassword === inform.password){
+
+        connection.query('DELETE FROM twitterdb.USER WHERE email = ? ',[inform.email], function (err, result, fields){
+            if(err)throw err;
             else {
-                res.send('<script>alert("비밀번호가 일치하지 않습니");location.href="/delete";</script>');
+                res.send('<script>alert("삭제 되었습니다"); location.href="/";</script>');
             }
-        }
-    })
+        })
+    }
+    else {
+        res.send('<script>alert("비밀번호가 일치하지 않습니");location.href="/delete";</script>');
+    }
+
 });
 
 module.exports = router;
