@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+<h3>회원 가입</h3>
+<form method="post">
+    <table>
+        <tr>
+            <td>이름 : </td>
+            <td><input type="text" name="name"></td>
+        </tr>
+        <tr>
+            <td>이메일 : </td>
+            <td><input type="email" name="email"></td>
+        </tr>
+        <tr>
+            <td>비밀번 : </td>
+            <td><input type="password" name="password"></td>
+        </tr>
+        <tr>
+            <td>비밀번호 확인 : </td>
+            <td><input type="password" name="passwordRe"></td>
+        </tr>
+        <tr>
+            <td>전화번호 : </td>
+            <td><input type="text" name="phonenumber"></td>
+        </tr>
+        <tr>
+            <td>성별 : </td>
+            <td><input type="radio" name ="gender" value ='0'>여</td>
+            <td><input type="radio" name ="gender" value ='1'>남</td>
+        </tr>
+        <tr>
+            <td><input type="submit" id="register" value="회원가입"></td>
+        </tr>
+    </table>
+</form>
+<script>
+    $("#register").click(function(){
+        $.ajax({
+            url:'/login',//주
+            async: false,
+            type: 'POST',
+            data:{ //data 할때 json으로,
+                userId : $("#email").val(),
+                userPw : $("#password").val()
+            },
+            success: function (data) {
+            },
+            error: function (err) {
+            }
+        });
+    });
+</script>
+</body>
+</html>
