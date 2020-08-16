@@ -2,14 +2,15 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>프로</title>
+    <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+    <title>프로필</title>
     <a href="/mainhome" height="5" width="5">
-        <img src="../bird.png"/>
+        <img src="./bird.png"/>
     </a>
 </head>
 <body>
 <h3>프로필</h3>
-<form method="POST">
+<form method="post">
     <table>
         <tr>
             <td>이름 : </td>
@@ -37,7 +38,8 @@
         </tr>
         <tr>
             <td><input type ="submit" value="수정" id = "update"></td>
-            <td><a href="./delete">회원탈퇴바로가기</a> </td>
+
+            <!--<td><input type ="button" value="삭제" id = "delete"></td>-->
        </tr>
     </table>
 </form>
@@ -49,10 +51,17 @@
             type: 'POST',
             async: false,
             dataType :'json',
-            data: "data",
+            data: {
+                name : $('#name').val(),
+                email : $('#email').val(),
+                phonenubmer : $('#phonenumer').val(),
+                gender : $('#gender').val(),
+                profile : $('#profile').val()
+            },
             success: function (data) {
                 console.log('1234')
                 //location.href="/update";
+
             },
             error: function (err) {
                 alert(data);

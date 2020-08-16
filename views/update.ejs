@@ -2,6 +2,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
+    <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
     <title>회원정보수정</title>
     <a href="/mainhome" height="5" width="5">
         <img src="./bird.png"/>
@@ -19,9 +20,13 @@
             <td>전화 번호 : </td>
             <td><input type="text" value ="<%=phonenumber%>" name="phonenumber"></td>
         </tr>
+
         <tr>
             <td>성별 : </td>
-            <td><input type="text" value ="<%=gender%>" name="gender"></td>
+            <td><input type="radio" name ="gender" value ='0'>여</td>
+            <td><input type="radio" name ="gender" value ='1'>남</td>
+        </tr>
+
         </tr>
         <tr>
             <td>프로필 : </td>
