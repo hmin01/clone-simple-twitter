@@ -1,0 +1,40 @@
+const conn = require('./conn');
+
+const mysql = require('./conn').init();
+
+module.exports = {
+    selectSync: async (query) => {
+        let conn = null;
+        try {
+            conn = await mysql.getConnection();
+            const [rows] = await conn.query(query);
+            conn.release();
+
+            return { result: true, message: rows };
+        } catch (err) {
+            if (conn !== null)
+                conn.release();
+
+            return { result: false, message: err.message };
+        }
+    },
+    querySync: async (query) => {
+        let conn = null;
+        try {
+            conn = await mysql.getConnection();
+            await conn.beginTransaction();
+            const [rows] = await conn.query(query);
+            await conn.commit();
+            conn.release();
+
+            return { result: true, message: rows };
+        } catch (err) {
+            if (conn !== null) {
+                await conn.rollback();
+                conn.release();
+            }
+
+            return { result: false, message: err.message };
+        }
+    },
+}
