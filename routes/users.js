@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var query = require('../models/user');
-var hash = require('../models/hash').hashValue;
+var hash = require('../helper/hash').hashValue;
 
 /* GET users listing. */
 router.get('/', (req, res) => {
@@ -27,14 +27,15 @@ router.get('/profile', (req, res) => {
 
 router.post('/profile',(req, res)=>{
     res.redirect('./update');
-})
+});
 
 /* Login Page */
 router.get('/login', (req, res) => {
   let inform = req.session;
-  res.render("login",{
-    session : inform
-})
+  res.render("login", {
+    session: inform
+  });
+});
   
 /* Login api */
 router.post('/login', (req, res) => {
@@ -42,7 +43,7 @@ router.post('/login', (req, res) => {
     email : req.body.email,
     password: hash(req.body.email,req.body.password)
   }
-  
+
   query.login(userInfo).then(rows=>{
     if(rows.message.length === 0){
       res.send('<script>alert("비밀번호가 일치하지 않습니다.");location.href="login";</script>');
@@ -71,7 +72,7 @@ router.post('/register', (req, res) => {
     phonenumber : req.body.phonenumber,
     gender : req.body.gender
   }
-  
+
   query.register(userInfo).then(result => {
     res.send('<script>alert("가입되었습니다");location.href="./login";</script>');
   }).catch(err => {
@@ -93,11 +94,15 @@ router.post('/delete', function (req,res,next) {
     email : req.session.user.email,
     password : hashpassword,
   }
-  
-  query.delete((userInfo)).then(result => {
-    res.send('<script>alert("삭제 되었습니다"); location.href="./home";</script>');
+  query.delete(userInfo).then(message => {
+    if(message.message.affectedRows === 1){
+      res.send('<script>alert("삭제 되었습니다"); location.href="/";</script>');
+    }
+   else{
+      res.send('<script>alert("비밀번호가 일치하지 않습니다.");location.href="./delete";</script>');
+    }
   }).catch(err => {
-    res.send('<script>alert("비밀번호가 일치하지 않습니다.");location.href="./delete";</script>');
+    console.log(err);
   });
 });
 
@@ -106,25 +111,21 @@ router.get('/update',(req,res)=>{
 });
 
 router.post('/update',(req,res)=>{
-  userInfo = {
+  const userInfo = {
     name : req.body.name,
     phonenumber: req.body.phonenumber,
     gender : req.body.gender,
     profile : req.body.profile,
     id : req.session.user.id
   }
-  
+
   query.update(userInfo).then(result=>{
-    if(result.result == true) {
       req.session.user.name = userInfo.name;
       req.session.user.phonenumber = userInfo.phonenumber;
       req.session.user.profile = userInfo.profile;
       res.send('<script>alert("성공!");location.href="./profile";</script>');
-    } else {
-      res.send('<script>alert("실패했습니다");location.href="./profile";</script>');
-    }
   }).catch(err =>{
-    throw err;
+    console.log(err);
   });
 });
 

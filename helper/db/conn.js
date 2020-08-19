@@ -4,9 +4,9 @@ module.exports = {
     init: () => {
         return mysql.createPool({
             host: 'localhost',
-            user: '',
-            password: '',
-            database: '',
+            user: 'root',
+            password: 'jiwon',
+            database: 'twitterdb',
             connectionLimit: 20,
             waitForConnections: true
         });
