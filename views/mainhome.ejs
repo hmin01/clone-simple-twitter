@@ -5,25 +5,18 @@
     <title> mainhome </title>
 </head>
 <body>
-
-<h1></h1>
-<form method="post">
+<form method="POST">
 <div>
     <p><%= email%>반갑습니다.</p>
     <input type="submit" name ="profile" value = "profile" id="profile"/>
 </div>
 </form>
-
 <script>
     $("#profile").click(function(){
         $.ajax({
-            url:'/users/profile',//주
+            url:'./profile',//주
             type: 'POST',
-            dataType :'json',
-            data: 'data',
             success: function (data) {
-                console.log('1234')
-                alert('success');
             },
             error: function (err) {
                 alert(data);

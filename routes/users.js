@@ -9,7 +9,6 @@ router.get('/', (req, res) => {
   res.render('home');
 });
 router.get('/mainhome',(req,res)=>{
-  console.log(req.session);
   if(req.session !== null){
     res.render('mainhome',{ email : req.session.user.email });
   }
@@ -21,64 +20,35 @@ router.post('/mainhome',(req, res)=>{
 
 /* User profile page */
 router.get('/profile', (req, res) => {
-  //res.send(req.method + " " + req.originalUrl);
-  console.log('GET');
-  var gender;
   var inform = req.session.user;
-  //console.log(inform);
-
-  if(inform.gender ===1){
-    gender = "남자";
-  }
-  else {
-    gender = "여자"
-  }
-  console.log(inform);
-
-  res.render('profile',inform[0]);
-
+  res.render('profile',inform);
 });
 
 router.post('/profile',(req, res)=>{
-  console.log('post');
-  var inform = req.session.user;
-  res.redirect('./update');
+    res.redirect('./update');
 })
-
-/* Detele user api */
-router.delete('/', (req, res) => {
-  res.send(req.method + " " + req.originalUrl);
-});
 
 /* Login */
 router.get('/login', (req, res) => {
-  //res.send(req.method + " " + req.originalUrl);
-  let session = req.session;
+  let inform = req.session;
   res.render("login",{
-    session :session
+    session : inform
   })
-  console.log(req.session);
-
 });
 
 /* Login api */
 router.post('/login', (req, res) => {
-  //res.send(req.method + " " + req.originalUrl);
-  const password = req.body.password;
-  const email= req.body.email;
   var userInfo = {
     email : req.body.email,
-    password: hash(email,password)
+    password: hash(req.body.email,req.body.password)
   }
-
   query.login(userInfo)
       .then(rows=>{
-        console.log(rows.message);
         if(rows.message.length === 0){
           res.send('<script>alert("비밀번호가 일치하지 않습니다.");location.href="login";</script>');
         }
         else {
-          req.session.user = rows.message;
+          req.session.user = rows.message[0];
           res.redirect('./mainhome');
         }
       }).catch(err =>{
@@ -88,36 +58,29 @@ router.post('/login', (req, res) => {
 
 
 router.get('/update',(req,res)=>{
-  var inform = req.session.user;
-  //console.log(inform);
-  res.render('update',inform[0]);
+  res.render('update',req.session.user);
 })
 
 router.post('/update',(req,res)=>{
-
-  var inform = req.session.user[0];
-  let body = req.body;
-  console.log(inform[0]);
-  //console.log(req.body);
-
   userInfo = {
-    name : body.name,
-    phonenumber: body.phonenumber,
-    gender : body.gender,
-    profile : body.profile,
-    id : inform.id
+    name : req.body.name,
+    phonenumber: req.body.phonenumber,
+    gender : req.body.gender,
+    profile : req.body.profile,
+    id : req.session.user.id
   }
-
   query.update(userInfo)
       .then(result=>{
-        //console.log(rows);
-        //req.session.user[0] = userInfo;
-        req.session.user[0].name = userInfo.name;
-        req.session.user[0].phonenumber = userInfo.phonenumber;
-        req.session.user[0].gender = userInfo.gender;
-        req.session.user[0].profile = userInfo.profile;
-        console.log("변경 완료");
-        res.redirect('./profile');
+        if(result.result == true)
+        {
+          req.session.user.name = userInfo.name;
+          req.session.user.phonenumber = userInfo.phonenumber;
+          req.session.user.profile = userInfo.profile;
+          res.send('<script>alert("성공!");location.href="./profile";</script>');
+        }
+        else {
+          res.send('<script>alert("실패했습니다");location.href="./profile";</script>');
+        }
       }).catch(err =>{
     throw  err;
   });

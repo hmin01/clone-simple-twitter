@@ -2,13 +2,14 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
     <title>회원정보수정</title>
     <a href="/mainhome" height="5" width="5">
         <img src="bird.png"/>
     </a>
 </head>
 <body>
+<form method="post">
 <h3>회원정보수정</h3>
 <form method="post">
     <table>
@@ -20,14 +21,6 @@
             <td>전화 번호 : </td>
             <td><input type="text" value ="<%=phonenumber%>" name="phonenumber"></td>
         </tr>
-
-        <tr>
-            <td>성별 : </td>
-            <td><input type="radio" name ="gender" value ='0'>여</td>
-            <td><input type="radio" name ="gender" value ='1'>남</td>
-        </tr>
-
-        </tr>
         <tr>
             <td>프로필 : </td>
             <td><input type="text" value ="<%=profile%>" name="profile"></td>
@@ -38,11 +31,10 @@
     </table>
 </form>
 
-
 <script>
-    $("#update").click(function(){
+    $("#update").submit(function(){
         $.ajax({
-            url:'/update',//주
+            url:'./update',//주
             type: 'POST',
             async: false,
             dataType :'json',
@@ -53,11 +45,10 @@
                 profile : $('#profile').val()
             },
             success: function (data) {
-                console.log('1234')
-                alert('success');
+
             },
             error: function (err) {
-                alert(data);
+
             }
         });
     });
