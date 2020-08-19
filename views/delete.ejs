@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+    <title>프로필</title>
+</head>
+<body>
+<h3>회원탈퇴</h3>
+<form method="post">
+    <table>
+        <tr>
+            <td>비밀번호 입력: </td>
+            <td><input type="password" name="password" id ="password"></td>
+        </tr>
+        <tr>
+            <td><input type="submit" id ="delete" value="삭제"></td>
+        </tr>
+    </table>
+</form>
+<script>
+    $("#delete").submit(function(){
+        $.ajax({
+            url:'/delete',//주
+            type: 'POST',
+            async: false,
+            dataType :'json',
+            data: {
+                password:$('#password').val()
+            },
+            success: function (data) {
+            },
+            error: function (err) {
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

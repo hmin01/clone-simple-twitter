@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+    <title>Document</title>
+</head>
+<body>
+<h3>회원 가입</h3>
+<form method="post" onsubmit="return tocheckpw()">
+    <table>
+        <tr>
+            <td>이름 : </td>
+            <td><input type="text" name="name"></td>
+        </tr>
+        <tr>
+            <td>이메일 : </td>
+            <td><input type="email" name="email"></td>
+        </tr>
+        <tr>
+            <td>비밀번호: </td>
+            <td><input type="password" name="password" id="password"></td>
+        </tr>
+        <tr>
+            <td>비밀번호 확인 : </td>
+            <td><input type="password" name="passwordRe" id="passwordRe"></td>
+            <td><label id="chkNotice" size="10"></label></td>
+        </tr>
+        <tr>
+            <td>전화번호 : </td>
+            <td><input type="text" name="phonenumber"></td>
+        </tr>
+        <tr>
+            <td>성별 : </td>
+            <td><input type="radio" name ="gender" value ='0'>여</td>
+            <td><input type="radio" name ="gender" value ='1'>남</td>
+        </tr>
+        <tr>
+            <td><input type="submit" id="register" value="회원가입"></td>
+        </tr>
+    </table>
+</form>
+
+
+
+
+<script type="text/javascript">
+function tocheckpw() {
+    var pw = document.getElementById("password").value;
+    var pwred = document.getElementById('passwordRe').value;
+
+    if(pw !=pwred){
+        alert('!비멀번호가 틀렸습니다. 다시 입력해주세요.');
+        return false;
+    }
+}
+</script>
+
+<script>
+    $("#register").submit(function(){
+        $.ajax({
+            url:'./register',//주
+            type: 'POST',
+            async: false,
+            dataType :'json',
+            data: {
+                email : $('#email').val(),
+                name : $('#name').val(),
+                password : $('#password').val(),
+                password: $('#paawordRe').val(),
+                phonenubmer : $('#phonenumber').val(),
+                gender : $('#gender').val(),
+                profile : $('#profile').val()
+            },
+            success: function (data) {
+                var jsonObj = JSON.parse(data);
+            },
+            error: function (err) {
+
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
