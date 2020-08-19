@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+    <title>twitterHome</title>
+</head>
+<body>
+<form method="post">
+<h1>homepage</h1>
+    <input id = "btn_login" name ="login" value = "login" type ="button"/>
+    <input id = "btn_register" name ="register" value="register" type ="button">
+</form>
+
+<script>
+    $("#btn_login").click(function(){
+        $.ajax({
+            url: '/login',
+            type: 'POST',
+            data :'data',
+            success: function (data) {
+                location.href="login";
+            },
+            error: function (err) {
+                alert(err);
+                return false;
+            }
+        })
+    });
+</script>
+
+<script>
+    $("#btn_register").click(function(){
+        $.ajax({
+            url: '/register',
+            type: 'GET',
+            data :'data',
+            success: function (data) {
+                location.href="/register";
+            },
+            error: function (err) {
+                alert(err);
+                return false;
+            }
+        })
+    });
+</script>
+
+</body>
+</html>

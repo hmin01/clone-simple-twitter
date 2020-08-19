@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+    <title> login </title>
+</head>
+<body>
+<form method="post">
+<h1>login</h1>
+<div>
+    <input id = "email" name="email" type ="email" placeholder="Email"/>
+</div>
+<div>
+    <input id = "password" name ="password" type ="password" placeholder="password"/>
+</div>
+
+<input type = "submit" value="Login" id ="btnLogin"/>
+</form>
+<!-- form를 사용하면 간단하게 전송할 수 있으나 성공했는지 여부 클라이언트에서 확인 할 수를없을 수 있다 -->
+
+<script>
+    $("#btnLogin").submit(function(){
+        $.ajax({
+            url:'./login',//주
+            type: 'POST',
+            async: false,
+            dataType :'json',
+            data: {
+                email : $('#email').val(),
+                password : $('#password').val()
+            },
+            success: function (data) {
+                //alert('success');
+            },
+            error: function (err) {
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

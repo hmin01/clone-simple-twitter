@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+    <title> mainhome </title>
+</head>
+<body>
+<form method="POST">
+<div>
+    <p><%= email%>반갑습니다.</p>
+    <input type="submit" name ="profile" value = "profile" id="profile"/>
+</div>
+</form>
+<script>
+    $("#profile").click(function(){
+        $.ajax({
+            url:'./profile',//주
+            type: 'POST',
+            success: function (data) {
+            },
+            error: function (err) {
+                alert(data);
+            }
+        });
+    });
+</script>
+
+</body>
