@@ -9,12 +9,10 @@ module.exports = {
             conn = await mysql.getConnection();
             const [rows] = await conn.query(query);
             conn.release();
-
             return { result: true, message: rows };
         } catch (err) {
             if (conn !== null)
                 conn.release();
-
             return { result: false, message: err.message };
         }
     },
@@ -33,7 +31,6 @@ module.exports = {
                 await conn.rollback();
                 conn.release();
             }
-
             return { result: false, message: err.message };
         }
     },
