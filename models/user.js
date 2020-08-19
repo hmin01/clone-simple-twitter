@@ -1,20 +1,15 @@
 const query = require('../helper/db/query');
 
 module.exports = {
-    register: async (data) => {
-        const selectQ = "";
-        return await query.selectSync(selectQ);
-    },
+
     login: async(data) => {
-        const selectQ = "";
+        const selectQ = `select * from USER where email = '${data.email}'and password = '${data.password}'`;
+        //console.log(selectQ);
         return await query.selectSync(selectQ);
     },
     update: async(data) => {
-        const updateQ = "";
+        const updateQ = `update USER set name ='${data.name}', phonenumber='${data.phonenumber}',gender='${data.gender}', profile='${data.profile}' where id='${data.id}'`;
+        console.log(updateQ);
         return await query.querySync(updateQ);
-    },
-    delete: async (data) => {
-        const deleteQ = "";
-        return await query.querySync(deleteQ);
     }
 };
