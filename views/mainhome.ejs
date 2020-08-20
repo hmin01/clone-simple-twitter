@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
     <title> mainhome </title>
 </head>
 <body>
 <form method="POST">
 <div>
     <p><%= email%>반갑습니다.</p>
-    <input type="submit" name ="profile" value = "profile" id="profile"/>
+    <input type="button" name ="profile" value = "profile" id="profile"/>
+    <a href ='../board'>게시판</a>
 </div>
 </form>
 <script>
@@ -16,13 +17,12 @@
         $.ajax({
             url:'./profile',//주
             type: 'POST',
-            success: function (data) {
+            success: function () {
+                location.href ='./profile';
             },
             error: function (err) {
-                alert(data);
             }
         });
     });
 </script>
-
 </body>

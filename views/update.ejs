@@ -9,7 +9,6 @@
     </a>
 </head>
 <body>
-<form method="post">
 <h3>회원정보수정</h3>
 <form method="post">
     <table>
@@ -36,7 +35,6 @@
         $.ajax({
             url:'./update',//주
             type: 'POST',
-            async: false,
             dataType :'json',
             data: {
                 name : $('#name').val(),

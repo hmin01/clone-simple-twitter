@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+    <meta charset="UTF-8">
+</head>
+<body>
+<form method="post" enctype="multipart/form-data">
+    <!-- //enctype="multipart/form-data" 로 설정해야 사용자가 전송한 파일을 서버로 전송할 수 있음
+    //문자를 인코딩하지 않음을 명시함. 이 방식은 <form> 요소가 파일이나 이미지를 서버로 전송할 때 주로 사용함-->
+    <h1>Create</h1>
+    <table>
+        <tr>
+            <td>내용</td>
+            <textarea id ="contents" name="contents" style="resize:none; width:500px; height:500px;"></textarea>
+        </tr>
+        <tr>
+            <td>
+                첨부파일
+            </td>
+            <td>
+                <input type="file" id="image_path" name="image_path">
+            </td>
+        </tr>
+        <input type="submit" id="create" value="create" name="create">
+    </table>
+</form>
+
+
+<script>
+    $(document).ready(function () {
+        $("#create").submit(function () {
+            $.ajax({
+                url: './create',
+                type: 'POST',
+                async: false,
+                dataType: 'json',
+                data: {
+                    contents: $('#contents').val(),
+                    image_path: $('#image_path').val(),
+                },
+                success: function (data) {
+                    //alert("글쓰기 완료");
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            })
+        });
+    });
+</script>
+</body>
+</html>

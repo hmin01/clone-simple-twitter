@@ -31,9 +31,8 @@ router.post('/profile',(req, res)=>{
 
 /* Login Page */
 router.get('/login', (req, res) => {
-  let inform = req.session;
   res.render("login", {
-    session: inform
+    session: req.session
   });
 });
   
@@ -111,6 +110,7 @@ router.get('/update',(req,res)=>{
 });
 
 router.post('/update',(req,res)=>{
+  console.log(req);
   const userInfo = {
     name : req.body.name,
     phonenumber: req.body.phonenumber,
