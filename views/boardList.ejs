@@ -22,14 +22,15 @@
 
 <form method="GET">
     <br>
-
     <input type ="button" name="create" value="create" id ="create"/>
     <br>
     <% BoardContents.forEach(function(post) { %>
         <table>
             <tr>
                 <%if(post.id == userId){%>
-                <td><input type ="button" name ="delete" id ="delete" value ="delete"><input type ="button" name ="update" id ="update" value ="update"></td>
+                    <input type ="text" hidden="" name="boardID" id="boardID" value="<%= post.b_id %>"></input>
+                <td><input type ="button" name ="delete" id ="delete" value ="delete">
+                    <input type ="button" name ="update" id ="update" value ="update"></td>
                 <%}%>
             </tr>
             <tr>
@@ -40,7 +41,10 @@
             </tr>
             <tr>
 
-                <td><%=post.contents%></td>
+                <!--<td><%=post.contents%></td> -->
+                <td><textarea hidden="" name="contents" style="resize: none; width: 500px; height: 100px;">
+                        <%= post.contents %></textarea>
+                    <%= post.contents %></td>
             </tr>
             <tr>
                 <td><img src="../uploads/<%=post.image_path%>" style= "width: 70%; height:70%"/></td>
@@ -53,10 +57,10 @@
 <script>
     $("#create").click(function(){
         $.ajax({
-            url: './board/create',
+            url: '/board/create',
             type: 'GET',
             success: function () {
-                location.href="./board/create";
+                location.href = './board/create'
             },
             error: function (err) {
             }
@@ -66,15 +70,21 @@
 <script>
     $("#delete").click(function(){
         $.ajax({
-            url: './board/delete',
-            type: 'GET',
+            url: '/board/delete',
+            type: 'POST',
+            async: false,
+            dataType: 'json',
+            data: {
+                b_id: $('#boardID').val(),
+            },
             success: function (data) {
-
             },
             error: function (err) {
             }
         })
     });
 </script>
+
+
 </body>
 </html>

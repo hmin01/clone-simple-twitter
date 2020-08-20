@@ -11,8 +11,9 @@ module.exports = {
     },
     deleteContents : async(data) =>{
         //usersession이랑 연동시키
-        const deleteContentQ = `DELETE FROM BOARD WHERE b_id ='${$data.b_id}`;
-        return await query.querySync(deleteContetQ);
+        const deleteContentQ = `DELETE FROM BOARD WHERE b_id ='${data.b_id}'`;
+        console.log(deleteContentQ);
+        return await query.querySync(deleteContentQ);
     },
     selectMyContents : async(data) =>{
         //세션이 일치하는 것을 조회

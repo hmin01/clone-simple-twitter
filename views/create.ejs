@@ -19,7 +19,7 @@
                 첨부파일
             </td>
             <td>
-                <input type="file" id="image_path" name="image_path">
+                <input type="file" id="image_path" name="image_path" value="image_path">
             </td>
         </tr>
         <input type="submit" id="create" value="create" name="create">
@@ -31,16 +31,14 @@
     $(document).ready(function () {
         $("#create").submit(function () {
             $.ajax({
-                url: './create',
+                url: '/board/create',
                 type: 'POST',
-                async: false,
                 dataType: 'json',
                 data: {
                     contents: $('#contents').val(),
                     image_path: $('#image_path').val(),
                 },
                 success: function (data) {
-                    //alert("글쓰기 완료");
                 },
                 error: function (data) {
                     console.log(data);

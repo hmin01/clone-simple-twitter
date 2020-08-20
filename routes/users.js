@@ -118,7 +118,6 @@ router.post('/update',(req,res)=>{
     profile : req.body.profile,
     id : req.session.user.id
   }
-
   query.update(userInfo).then(result=>{
       req.session.user.name = userInfo.name;
       req.session.user.phonenumber = userInfo.phonenumber;
