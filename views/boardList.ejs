@@ -4,10 +4,12 @@
     <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
     <meta charset="UTF-8">
 </head>
+<script>
+
+</script>
 <body>
 <style>
     table {
-        width: 100%;
         border: 1px solid #444444;
         width :60%;
         height:100px;
@@ -37,10 +39,11 @@
                 <td><%=post.mod_date%></td>
             </tr>
             <tr>
+
                 <td><%=post.contents%></td>
             </tr>
             <tr>
-                <td><%=post.image_path%></td>
+                <td><img src="../uploads/<%=post.image_path%>" style= "width: 70%; height:70%"/></td>
             </tr>
         </table>
     <br>

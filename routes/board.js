@@ -8,7 +8,10 @@ var mkfile = require('../helper/imagemkdir').file();
 router.get('/',function (req, res) {
     query.boardList()
         .then(result=>{
-            res.render('boardList',{BoardContents : result.message,userId :req.session.user.id});
+            console.log(result.message);
+            res.render('boardList', {
+                BoardContents : result.message,
+                userId :req.session.user.id});
         }).catch(err=>{
             console.log(err);
     })
