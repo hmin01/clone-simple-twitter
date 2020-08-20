@@ -8,13 +8,16 @@
 <form method="POST">
 <div>
     <p><%= email%>반갑습니다.</p>
-    <input type="submit" name ="profile" value = "profile" id="profile"/>
+    <input type="button" name ="profile" value = "profile" id="profile"/>
+    <td><a href="../board">글쓰기</a></td>
 </div>
 </form>
+
 <script>
     $("#profile").click(function(){
         $.ajax({
             url:'./profile',//주
+            asycn: false,
             type: 'POST',
             success: function (data) {
             },
@@ -24,5 +27,4 @@
         });
     });
 </script>
-
 </body>

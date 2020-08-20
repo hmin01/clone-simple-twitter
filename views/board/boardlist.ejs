@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+    <title>board</title>
+</head>
+<style>
+    table {
+        width: 100%;
+        border: 1px solid #444444;
+    }
+    td {
+        border: 1px solid #444444;
+    }
+    form {
+        margin:200px;
+        padding: 0 5px;
+        background: #F5F5F5;
+    }
+</style>
+<body>
+<h3>board</h3>
+
+<form method="post" marge=>
+
+    <input type ="button" name="write" value="write" id ="write"/>
+    <% boardlist.forEach(function(post) { %>
+    <div>
+        <table>
+            <tr>
+                <td><%=post.name%></td><td><%=post.mod_date%></td>
+            </tr>
+            <tr>
+                <td><%=post.contents%></td><td><%=post.image_path%></td>
+            </tr>
+        </table>
+    </div>
+    <% }) %>
+</form>
+<script>
+    $("#write").click(function(){
+        $.ajax({
+            url: './board/write',
+            type: 'GET',
+            success: function () {
+                location.href="./board/write";
+            },
+            error: function (err) {
+            }
+        })
+    });
+</script>
+</body>
+</html>
