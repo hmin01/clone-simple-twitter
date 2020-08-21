@@ -24,17 +24,34 @@
     <div>
         <table>
             <tr>
-                <td><%=post.name%> <%=post.mod_date%><input type="button" id ="update" name="update"value="수정"><input type="button" id ="delete" name="delete"value="삭제"></td>
+                <td><%=post.name%> <%=post.mod_date%><input type="button" id ="updateonbtn" name="updateonbtn"value="수정하기" onClick="agreeCheck(this.form)" ><input hidden="true" type="button" id ="delete" name="delete"value="삭제"></td>
             </tr>
             <tr>
                 <input type="text" name ="b_id" value ='<%= post.b_id %>' id="b_id">
-                <td><textarea disabled="disabled" id="contents" name="contents" style="resize: none; width: 500px; height: 100px;"><%= post.contents %></textarea></td>
+                <td><textarea disabled="true" id="contents" name="contents" style="resize: none; width: 500px; height: 100px;"><%= post.contents %></textarea><input hidden="true" type="button" id ="update" name="update"value="수정" ></td>
             <tr>
             </tr>
         </table>
     </div>
     <% }) %>
 </form>
+<script>
+    function agreeCheck(frm) {
+        if (frm.contents.disabled==true && frm.update.hidden==true){
+            frm.contents.disabled=false
+            frm.update.hidden=false;
+        }
+        else{
+            frm.contents.disabled=true;
+            frm.update.hidden=false;
+        }
+    }
+</script>
+<script>
+    $('#updateonbtn').click(function d() {
+        return $('contents').attr('disabled', false);
+    });
+</script>
 <script>
     $("#write").click(function(){
         $.ajax({
