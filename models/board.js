@@ -14,7 +14,6 @@ module.exports = {
         return await query.querySync(selectQ);
     },
     delete: async (data) => {
-
         const selectQ = `DELETE FROM board WHERE b_id = '${data.b_id}'`;
         return await query.querySync(selectQ);
     },

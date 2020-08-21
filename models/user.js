@@ -1,5 +1,4 @@
 const query = require('../helper/db/query');
-
 module.exports = {
     register: async (data) => {
         const selectQ = `INSERT INTO USER(name, password,email,phonenumber, gender, registerdate,profile) VALUES('${data.name}','${data.password}','${data.email}','${data.phonenumber}','${data.gender}',NOW(),'${data.profile}')`;
@@ -17,4 +16,6 @@ module.exports = {
         const deleteQ = `DELETE FROM USER WHERE email = '${data.email}' and password = '${data.password}'`;
         return await query.querySync(deleteQ);
     }
+
+
 };

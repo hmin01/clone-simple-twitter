@@ -45,7 +45,6 @@ router.post('/write',imageupload.single('image_path'), (req,res,next)=>{
     }
 });
 
-
 router.get('/update', function (req,res,next) {
     query.search().then(result => {
         res.render('./board/boardlist',{
