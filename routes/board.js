@@ -32,10 +32,11 @@ router.get('/delete',function (req, res) {
 router.post('/delete',function (req, res) {
 
     query.deleteContents({ b_id : req.body.b_id}).then(message => {
-       console.log(message.message);
-        if(message.message.affectedRows === 1){
-            res.redirect('/board');
-        }
+       //console.log(message.message);
+        //확인해볼것
+        //res.send('<script>alert(삭제");location.replace();</script>')
+        res.redirect('back');
+
     }).catch(err => {
         console.log(err);
     });
@@ -56,11 +57,33 @@ router.post('/create',image_upload.single('image_path'),function (req, res) {
     }
     console.log(Contents)
     query.createContents(Contents).then(result =>{
-        res.send('<script>alert("글쓰기 완료");lcation.href="/";</script>')
+        res.send('<script>alert("글쓰기 완료");location.href="./";</script>')
     }).catch(err=>{
         throw err;
     })
 
-})
+});
+
+router.get('/update', function (req,res,next) {
+    res.json({
+        b_id : req.params.b_id,
+        contents : req.params.contents
+    })
+});
+
+router.post('/update', (req,res,next)=>{
+
+    const updateContents ={
+        b_id : req.body.b_id,
+        contents : req.body.contents,
+    }
+    query.updateContents(updateContents)
+        .then(result => {
+            res.send('<script>alert("글쓰기가 수정되었습니다.");location.reload();</script>');
+        }).catch(err =>{
+        throw err;
+    });
+
+});
 
 module.exports = router;

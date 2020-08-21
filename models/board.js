@@ -19,5 +19,11 @@ module.exports = {
         //세션이 일치하는 것을 조회
         const selectMyContents = `SELECT * FROM WHERE user_id ='${data.user_id}'`;
         return await query.selectSync(selectMyContents);
-    }
+    },
+    updateContents : async(data) =>{
+        //세션이 일치하는 것을 조회
+        const updateMyContents = `UPDATE BOARD SET CONTENTS = '${data.contents}' where b_id = '${data.b_id}'`;
+        return await query.querySync(updateMyContents);
+    },
+
 }

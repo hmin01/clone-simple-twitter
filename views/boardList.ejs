@@ -20,7 +20,7 @@
     }
 </style>
 
-<form method="GET">
+<form method="GET" name="form1">
     <br>
     <input type ="button" name="create" value="create" id ="create"/>
     <br>
@@ -29,8 +29,8 @@
             <tr>
                 <%if(post.id == userId){%>
                     <input type ="text" hidden="" name="boardID" id="boardID" value="<%= post.b_id %>"></input>
-                <td><input type ="button" name ="delete" id ="delete" value ="delete">
-                    <input type ="button" name ="update" id ="update" value ="update"></td>
+                <td><input type ="button" name ="delete" id ="delete" value ="delete"/>
+                    <button type="button" onclick="updateVisible()">update</button>
                 <%}%>
             </tr>
             <tr>
@@ -40,11 +40,9 @@
                 <td><%=post.mod_date%></td>
             </tr>
             <tr>
-
-                <!--<td><%=post.contents%></td> -->
-                <td><textarea hidden="" name="contents" style="resize: none; width: 500px; height: 100px;">
-                        <%= post.contents %></textarea>
-                    <%= post.contents %></td>
+                <td><textarea id="contents" name="contents" style="visibility:hidden;resize: none; width: 500px; height: 100px;"><%= post.contents %></textarea>
+                    <%=post.contents%>
+                    <input type="button" id ="update" name="update"value="수정" style ="visiblity:hidden" ></td>
             </tr>
             <tr>
                 <td><img src="../uploads/<%=post.image_path%>" style= "width: 70%; height:70%"/></td>
@@ -55,7 +53,13 @@
 </form>
 
 <script>
-    $("#create").click(function(){
+function updateVisible() {
+    document.getElementById('contents').style.visibility ="visible";
+}
+</script>
+
+<script>
+    $("#create").click(function a(){
         $.ajax({
             url: '/board/create',
             type: 'GET',
@@ -78,6 +82,7 @@
                 b_id: $('#boardID').val(),
             },
             success: function (data) {
+                location.href ='./board/create'
             },
             error: function (err) {
             }
@@ -85,6 +90,25 @@
     });
 </script>
 
+<script>
+    $("#update").click(function(){
+        $.ajax({
+            url: './board/update',
+            type: 'POST',
+            async: false,
+            dataType: 'json',
+            data: {
+                b_id: $('#b_id').val(),
+                contents: $('#contents').val(),
+            },
+            success: function (data) {
+                location.href="./board/update";
+            },
+            error: function (err) {
+            }
+        })
+    });
+</script>
 
 </body>
 </html>
