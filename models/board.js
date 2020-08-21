@@ -10,11 +10,12 @@ module.exports = {
         return await query.selectSync(selectQ);
     },
     update: async (data) => {
-        const selectQ ='';
+        const selectQ =`update board set contents = '${data.contents}' where b_id = '${data.b_id}'`;
         return await query.querySync(selectQ);
     },
     delete: async (data) => {
-        const selectQ = '';
+
+        const selectQ = `DELETE FROM board WHERE b_id = '${data.b_id}'`;
         return await query.querySync(selectQ);
     },
 };

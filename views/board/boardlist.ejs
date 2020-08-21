@@ -7,32 +7,29 @@
 </head>
 <style>
     table {
-        width: 100%;
+        width: 60%;
+        height: 100px;
         border: 1px solid #444444;
+        text-align: center;
     }
     td {
         border: 1px solid #444444;
     }
-    form {
-        margin:200px;
-        padding: 0 5px;
-        background: #F5F5F5;
-    }
 </style>
 <body>
 <h3>board</h3>
-
-<form method="post" marge=>
-
+<form id ="boardlist" name = "boardlist" method="post">
     <input type ="button" name="write" value="write" id ="write"/>
     <% boardlist.forEach(function(post) { %>
     <div>
         <table>
             <tr>
-                <td><%=post.name%></td><td><%=post.mod_date%></td>
+                <td><%=post.name%> <%=post.mod_date%><input type="button" id ="update" name="update"value="수정"><input type="button" id ="delete" name="delete"value="삭제"></td>
             </tr>
             <tr>
-                <td><%=post.contents%></td><td><%=post.image_path%></td>
+                <input type="text" name ="b_id" value ='<%= post.b_id %>' id="b_id">
+                <td><textarea id="contents" name="contents" style="resize: none; width: 500px; height: 100px;"><%= post.contents %></textarea></td>
+            <tr>
             </tr>
         </table>
     </div>
@@ -45,6 +42,43 @@
             type: 'GET',
             success: function () {
                 location.href="./board/write";
+            },
+            error: function (err) {
+            }
+        })
+    });
+</script>
+<script>
+    $("#update").click(function(){
+        $.ajax({
+            url: './board/update',
+            type: 'POST',
+            async: false,
+            dataType: 'json',
+            data: {
+                b_id: $('#b_id').val(),
+                contents: $('#contents').val(),
+            },
+            success: function (data) {
+            },
+            error: function (err) {
+            }
+        })
+    });
+</script>
+
+<script>
+    $("#delete").click(function(){
+        $.ajax({
+            url: './board/delete',
+            type: 'POST',
+            async: false,
+            dataType: 'json',
+            data: {
+                b_id: $('#b_id').val(),
+                contents: $('#contents').val(),
+            },
+            success: function (data) {
             },
             error: function (err) {
             }
