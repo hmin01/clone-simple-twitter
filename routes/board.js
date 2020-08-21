@@ -28,8 +28,12 @@ router.get('/delete',function (req, res) {
 
 router.post('/delete',function (req, res) {
     query.deleteContents({ b_id : req.body.b_id}).then(message => {
-        res.send('<script>alert("삭제");location.replace();</script>')
-        //es.redirect('back');
+        if(message.message.affectedRows === 1){
+            res.send({"success" :1})
+        }
+        else{
+            res.send("error");
+        }
 
     }).catch(err => {
         console.log(err);
@@ -37,12 +41,15 @@ router.post('/delete',function (req, res) {
 
 });
 
+
 router.get('/create',function (req, res) {
     res.render('create');
 })
 
+
 //single :  fiedname에 명시된 단수 파일을 전달 받는다. --> 파일을 전달 받을건데, writing파일의 이미지 네임을 받는다. :
 router.post('/create',image_upload.single('image_path'),function (req, res) {
+
     const Contents = {
         contents : req.body.contents,
         image_path : (req.file) ? req.file.filename : "",
@@ -50,16 +57,18 @@ router.post('/create',image_upload.single('image_path'),function (req, res) {
     }
     console.log(Contents)
     query.createContents(Contents).then(result =>{
-        res.send('<script>alert("글쓰기 완료");location.href="./";</script>')
+        if(result.message.affectedRows === 1){
+            res.send({message:"success"});
+        }
+        else{
+            res.send("err");
+        }
     }).catch(err=>{
         throw err;
     })
 
 });
 
-router.get('/update', function (req,res,next) {
-
-});
 
 router.post('/update', (req,res,next)=>{
 
@@ -67,13 +76,19 @@ router.post('/update', (req,res,next)=>{
         b_id : req.body.b_id,
         contents : req.body.contents,
     }
-    console.log(updateContents);
-    query.updateContents(updateContents)
-        .then(result => {
-            res.send('<script>alert("글쓰기가 수정되었습니다.");location.reload();</script>');
+    query.updateContents(updateContents).then(message => {
+
+        if(message.message.affectedRows === 1){
+            query.updateContentsBoard({b_id : req.body.b_id }).then(result =>{
+                console.log(result.message[0]);
+                res.send(result.message[0])
+            })
+        }
         }).catch(err =>{
         throw err;
     });
+
+
 });
 
 module.exports = router;

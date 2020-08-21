@@ -8,13 +8,13 @@
 <form method="GET">
 <h1>homepage</h1>
     <input id = "btn_login" name ="login" value = "login" type ="button"/>
-    <input id = "btn_register" name ="register" value="register" type ="button">
+    <input id = "btn_register" name ="register" value="register" type ="button"/>
 </form>
 
 <script>
     $("#btn_login").click(function(){
         $.ajax({
-            url: './users/login',
+            url: '/users/login',
             type: 'GET',
             success: function () {
                 location.href="./users/login";
@@ -28,10 +28,10 @@
 <script>
     $("#btn_register").click(function(){
         $.ajax({
-            url: './users/register',
+            url: '/users/register',
             type: 'GET',
             success: function () {
-                location.href="./users/register";
+                location.href="/users/register";
             },
             error: function (err) {
             }

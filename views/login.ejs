@@ -14,29 +14,45 @@
     <input id = "password" name ="password" type ="password" placeholder="password"/>
 </div>
 
-<input type = "submit" value="Login" id ="btnLogin"/>
+    <input type = "button" value="Login" id ="btnLogin"/>
+    <input type = "button" value="registe" id ="btnReg"/>
+
 </form>
 <!-- form를 사용하면 간단하게 전송할 수 있으나 성공했는지 여부 클라이언트에서 확인 할 수를없을 수 있다 -->
 
 <script>
-    $("#btnLogin").submit(function(){
+    $("#btnLogin").click(function(){
         $.ajax({
-            url:'./login',//주
+            url:'/users/login',//주
             type: 'POST',
-            async: false,
             dataType :'json',
             data: {
                 email : $('#email').val(),
                 password : $('#password').val()
             },
             success: function (data) {
-                //alert('success');
+                location.href ='/board';
+            },
+            error: function (err) {
+                alert('해당 아이디가 없거나, 패스워드가 일치하지 않습니다');
+                $('#password').val('');
+            }
+        });
+    });
+</script>
+
+<script>
+    $("#btnReg").click(function(){
+        $.ajax({
+            url:'/users/register',//주
+            type: 'GET',
+            success: function () {
+                location.href ='./register';
             },
             error: function (err) {
             }
         });
     });
 </script>
-
 </body>
 </html>

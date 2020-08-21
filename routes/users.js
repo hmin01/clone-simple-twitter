@@ -6,14 +6,23 @@ var hash = require('../helper/hash').hashValue;
 /* GET users listing. */
 router.get('/', (req, res) => {
   //res.send('respond with a resource');
-  res.render('home');
+    res.render('../views/home');
 });
 
-router.get('/mainhome',(req,res)=>{
-  if(req.session !== null){
-    res.render('mainhome',{ email : req.session.user.email });
+/*
+router.get('/mainhome', (req, res) => {
+  console.log(11111);
+  console.log(req.session.user.email);
+  //res.render('../views/home');
+  //res.render('mainhome');
+  if(req.session.user !== null) {
+    res.render('../views/mainhome', {email: req.session.user.email})
+  }
+  else{
+    res.render('../views/login');
   }
 });
+*/
 
 router.post('/mainhome',(req, res)=>{
   res.redirect('./profile');
@@ -42,13 +51,13 @@ router.post('/login', (req, res) => {
     email : req.body.email,
     password: hash(req.body.email,req.body.password)
   }
-
   query.login(userInfo).then(rows=>{
-    if(rows.message.length === 0){
-      res.send('<script>alert("비밀번호가 일치하지 않습니다.");location.href="login";</script>');
-    } else {
+    if(rows.message.length !== 0){
       req.session.user = rows.message[0];
-      res.redirect('./mainhome');
+      res.send({"sucess" :1});
+    }
+    else{
+      res.send("err");
     }
   }).catch(err =>{
     throw  err;
@@ -101,8 +110,9 @@ router.post('/delete', function (req,res,next) {
       res.send('<script>alert("비밀번호가 일치하지 않습니다.");location.href="./delete";</script>');
     }
   }).catch(err => {
-    console.log(err);
+    throw err;
   });
+
 });
 
 router.get('/update',(req,res)=>{

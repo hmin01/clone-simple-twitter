@@ -20,18 +20,37 @@
     }
 </style>
 
-<form method="GET">
-    <br>
-    <input type ="button" name="create" value="create" id ="create"/>
+<form method="post" enctype="multipart/form-data" name="form1">
+    <!-- //enctype="multipart/form-data" 로 설정해야 사용자가 전송한 파일을 서버로 전송할 수 있음
+    //문자를 인코딩하지 않음을 명시함. 이 방식은 <form> 요소가 파일이나 이미지를 서버로 전송할 때 주로 사용함-->
+    <h1>Create</h1>
+    <table>
+        <tr>
+            <textarea id ="createcontents" name="createcontents" style="resize:none; width:500px; height:200px;"></textarea>
+        </tr>
+        <tr>
+            <td>
+                첨부파일
+            </td>
+            <td>
+                <input type="file" id="image_path" name="image_path" value="image_path">
+            </td>
+        </tr>
+        <input type="button" id="create" value="create" name="create">
+    </table>
+</form>
+<form name="form2">
     <br>
     <% BoardContents.forEach(function(post) { %>
-        <table>
+        <table id = "contents_area">
             <tr>
                 <%if(post.id == userId){%>
-                    <input type ="text" hidden="" name="boardID" id="boardID" value="<%= post.b_id %>"></input>
+                    <input type ="text" hidden="" name="boardID" id="boardID" value="<%= post.b_id %>"/>
                 <td><input type ="button" name ="delete" id ="delete" value ="delete"/>
                     <input type="button" id ="update_btn" name="update_btn" value="수정하기" onclick="updateVisible(this.form)"/>
+                </td>
                 <%}%>
+
             </tr>
             <tr>
                 <td><%=post.name%></td>
@@ -42,7 +61,7 @@
 
             <tr>
                 <td>
-                    <%=post.contents%>
+                    <div id ="bf_contents_area"><%=post.contents%></div>
                     <!--<textarea id="bf_contents" name="bf_contents" style="resize: none; width: 500px; height: 100px;"><%=post.contents%></textarea>-->
                     <textarea hidden="true" id="contents" name="contents" style="resize: none; width: 500px; height: 100px;"><%= post.contents %></textarea>
                     <input  type="button" hidden="true" id ="update" name="update" value="수정">
@@ -62,10 +81,9 @@
         $('#contents').show();
         $('#update').show();
     })
-
 </script>
 
-<script>
+<!--<script>
     $("#create").click(function a(){
         $.ajax({
             url: '/board/create',
@@ -77,19 +95,41 @@
             }
         })
     });
+</script>-->
+
+<script>
+        $("#create").click(function () {
+            $.ajax({
+                url: '/board/create',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    contents: $('#createcontents').val(),
+                    image_path: $('#image_path').val(),
+                },
+                success: function (data) {
+                    alert("성공");
+                    location.reload();
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            })
+    });
 </script>
+
 <script>
     $("#delete").click(function(){
         $.ajax({
             url: '/board/delete',
             type: 'POST',
-            async: false,
             dataType: 'json',
             data: {
                 b_id: $('#boardID').val(),
             },
             success: function (data) {
-                //location.href ='./board/create'
+                alert("삭제 되었습니다");
+                location.reload();
             },
             error: function (err) {
             }
@@ -108,9 +148,10 @@
                 b_id: $('#boardID').val(),
                 contents: $('#contents').val(),
             },
-            success: function (data) {
-               //alert(data['contents']);
-                //location.href="./board/update";
+            success: function (data,status, xhr) {
+                console.log(data);
+                $("#bf_contents_area").html(data);
+
             },
             error: function (err) {
             }

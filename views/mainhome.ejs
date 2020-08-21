@@ -4,13 +4,24 @@
     <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
     <title> mainhome </title>
 </head>
+<style>
+    table {
+        border: 1px solid #444444;
+        width :60%;
+        height:100px;
+        text-align: center;
+    }
+    td {
+        border: 1px solid #444444;
+    }
+</style>
+
 <body>
 <form method="POST">
-<div>
-    <p><%= email%>반갑습니다.</p>
-    <input type="button" name ="profile" value = "profile" id="profile"/>
-    <a href ='../board'>게시판</a>
-</div>
+    <div>
+        <p><%= email%>반갑습니다.</p>
+        <input type="button" name ="profile" value = "profile" id="profile"/>
+    </div>
 </form>
 <script>
     $("#profile").click(function(){

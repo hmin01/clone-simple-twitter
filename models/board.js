@@ -25,5 +25,9 @@ module.exports = {
         const updateMyContents = `UPDATE BOARD SET CONTENTS = '${data.contents}' where b_id = '${data.b_id}'`;
         return await query.querySync(updateMyContents);
     },
+    updateContentsBoard : async (data) =>{
+        const updateContentsBoard = `SELECT CONTENTS FROM BOARD WHERE b_id = '${data.b_id}'`;
+        return await query.selectSync(updateContentsBoard);
+    }
 
 }
