@@ -20,7 +20,7 @@
     }
 </style>
 
-<form method="GET" name="form1">
+<form method="GET">
     <br>
     <input type ="button" name="create" value="create" id ="create"/>
     <br>
@@ -30,7 +30,7 @@
                 <%if(post.id == userId){%>
                     <input type ="text" hidden="" name="boardID" id="boardID" value="<%= post.b_id %>"></input>
                 <td><input type ="button" name ="delete" id ="delete" value ="delete"/>
-                    <button type="button" onclick="updateVisible()">update</button>
+                    <input type="button" id ="update_btn" name="update_btn" value="수정하기" onclick="updateVisible(this.form)"/>
                 <%}%>
             </tr>
             <tr>
@@ -39,13 +39,17 @@
             <tr>
                 <td><%=post.mod_date%></td>
             </tr>
+
             <tr>
-                <td><textarea id="contents" name="contents" style="visibility:hidden;resize: none; width: 500px; height: 100px;"><%= post.contents %></textarea>
+                <td>
                     <%=post.contents%>
-                    <input type="button" id ="update" name="update"value="수정" style ="visiblity:hidden" ></td>
+                    <!--<textarea id="bf_contents" name="bf_contents" style="resize: none; width: 500px; height: 100px;"><%=post.contents%></textarea>-->
+                    <textarea hidden="true" id="contents" name="contents" style="resize: none; width: 500px; height: 100px;"><%= post.contents %></textarea>
+                    <input  type="button" hidden="true" id ="update" name="update" value="수정">
+                </td>
             </tr>
             <tr>
-                <td><img src="../uploads/<%=post.image_path%>" style= "width: 70%; height:70%"/></td>
+                <td><img src="../uploads/<%=post.image_path%>" style= "width: 60%; height:60%"/></td>
             </tr>
         </table>
     <br>
@@ -53,9 +57,12 @@
 </form>
 
 <script>
-function updateVisible() {
-    document.getElementById('contents').style.visibility ="visible";
-}
+    $('#update_btn').click(function () {
+        //$('#bf_contents').hidden();
+        $('#contents').show();
+        $('#update').show();
+    })
+
 </script>
 
 <script>
@@ -82,7 +89,7 @@ function updateVisible() {
                 b_id: $('#boardID').val(),
             },
             success: function (data) {
-                location.href ='./board/create'
+                //location.href ='./board/create'
             },
             error: function (err) {
             }
@@ -93,16 +100,17 @@ function updateVisible() {
 <script>
     $("#update").click(function(){
         $.ajax({
-            url: './board/update',
+            url: '/board/update',
             type: 'POST',
             async: false,
             dataType: 'json',
             data: {
-                b_id: $('#b_id').val(),
+                b_id: $('#boardID').val(),
                 contents: $('#contents').val(),
             },
             success: function (data) {
-                location.href="./board/update";
+               //alert(data['contents']);
+                //location.href="./board/update";
             },
             error: function (err) {
             }

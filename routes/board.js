@@ -24,18 +24,12 @@ router.get('/board',function (req,res) {
 })
 
 router.get('/delete',function (req, res) {
-    res.json({
-        b_id : req.params.b_id
-    })
 });
 
 router.post('/delete',function (req, res) {
-
     query.deleteContents({ b_id : req.body.b_id}).then(message => {
-       //console.log(message.message);
-        //확인해볼것
-        //res.send('<script>alert(삭제");location.replace();</script>')
-        res.redirect('back');
+        res.send('<script>alert("삭제");location.replace();</script>')
+        //es.redirect('back');
 
     }).catch(err => {
         console.log(err);
@@ -49,7 +43,6 @@ router.get('/create',function (req, res) {
 
 //single :  fiedname에 명시된 단수 파일을 전달 받는다. --> 파일을 전달 받을건데, writing파일의 이미지 네임을 받는다. :
 router.post('/create',image_upload.single('image_path'),function (req, res) {
-    //console.log(req.file['filename']);
     const Contents = {
         contents : req.body.contents,
         image_path : (req.file) ? req.file.filename : "",
@@ -65,10 +58,7 @@ router.post('/create',image_upload.single('image_path'),function (req, res) {
 });
 
 router.get('/update', function (req,res,next) {
-    res.json({
-        b_id : req.params.b_id,
-        contents : req.params.contents
-    })
+
 });
 
 router.post('/update', (req,res,next)=>{
@@ -77,13 +67,13 @@ router.post('/update', (req,res,next)=>{
         b_id : req.body.b_id,
         contents : req.body.contents,
     }
+    console.log(updateContents);
     query.updateContents(updateContents)
         .then(result => {
             res.send('<script>alert("글쓰기가 수정되었습니다.");location.reload();</script>');
         }).catch(err =>{
         throw err;
     });
-
 });
 
 module.exports = router;
