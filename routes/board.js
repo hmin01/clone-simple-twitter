@@ -8,7 +8,8 @@ router.get('/', function(req, res, next) {
     //console.log(req.params);
     query.search().then(result => {
         res.render('./board/boardlist',{
-            boardlist : result.message
+            boardlist : result.message,
+            userId : req.session.user.id
         });
     }).catch(err => {
         throw err;
@@ -25,12 +26,11 @@ router.get('/write', function (req,res,next) {
 router.post('/write',imageupload.single('image_path'), (req,res,next)=>{
     //res.send('Uploaded! : '+req.file); // object를 리턴함
     console.log(req.file);
-    const inform = req.session.user;
     try{
         const boardInfo ={
             contents : req.body.contents,
-            image_path : req.file['filename'],
-            user_id : inform.id
+            image_path : (req.file) ? req.file.filename : "",
+            user_id : req.session.user.id
         }
 
         query.write(boardInfo)
@@ -45,21 +45,21 @@ router.post('/write',imageupload.single('image_path'), (req,res,next)=>{
     }
 });
 
+
 router.get('/update', function (req,res,next) {
-    query.search().then(result => {
+/*    query.search().then(result => {
         res.render('./board/boardlist',{
             boardlist : result.message
         });
     }).catch(err => {
         throw err;
-    });
+    });*/
 });
 
 router.post('/update', (req,res,next)=>{
     const boardInfo ={
         b_id : req.body.b_id,
-        contents : req.body.contents,
-        user_id : req.session.user
+        contents : req.body.contents
     }
     query.update(boardInfo)
         .then(result => {
@@ -72,19 +72,18 @@ router.post('/update', (req,res,next)=>{
 
 
 router.get('/delete', function (req,res,next) {
-    query.search().then(result => {
+/*    query.search().then(result => {
         res.render('./board/boardlist',{
             boardlist : result.message
         });
     }).catch(err => {
         throw err;
-    });
+    });*/
 });
 router.post('/delete', (req,res,next)=>{
     const boardInfo ={
         b_id : req.body.b_id,
-        contents : req.body.contents,
-        user_id : req.session.user
+        contents : req.body.contents
     }
     query.delete(boardInfo)
         .then(result => {

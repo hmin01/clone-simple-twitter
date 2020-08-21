@@ -18,32 +18,42 @@
 </style>
 <body>
 <h3>board</h3>
-<form id ="boardlist" name = "boardlist" method="post">
+<form id ="form" name = "form" method="post">
     <input type ="button" name="write" value="write" id ="write"/>
     <% boardlist.forEach(function(post) { %>
     <div>
         <table>
             <tr>
-                <td><%=post.name%> <%=post.mod_date%><input type="button" id ="updateonbtn" name="updateonbtn"value="수정하기" onClick="agreeCheck(this.form)" ><input hidden="true" type="button" id ="delete" name="delete"value="삭제"></td>
+                <td>
+                    <%=post.name%> <%=post.mod_date%>
+                    <%if(post.id == userId){%>
+                    <input type="button" id ="updateonbtn" name="updateonbtn"value="Edit" onclick="Check(this.form)">
+                        <input hidden="true"  type="button" id ="delete" name="delete" value="delete">
+                    <%}%>
+                </td>
             </tr>
             <tr>
                 <input type="text" name ="b_id" value ='<%= post.b_id %>' id="b_id">
-                <td><textarea disabled="true" id="contents" name="contents" style="resize: none; width: 500px; height: 100px;"><%= post.contents %></textarea><input hidden="true" type="button" id ="update" name="update"value="수정" ></td>
-            <tr>
+                <td>
+                    <textarea disabled="true" id="contents" name="contents" style="resize: none; width: 500px; height: 100px;"><%= post.contents %></textarea>
+                    <input hidden="true"  type="button" id ="update" name="update" value="수정">
+                    <img src="../uploads/<%=post.image_path%>" style= "width: 15%; height:15%"/>
+                </td>
+
             </tr>
         </table>
     </div>
     <% }) %>
 </form>
-<script>
-    function agreeCheck(frm) {
-        if (frm.contents.disabled==true && frm.update.hidden==true){
-            frm.contents.disabled=false
-            frm.update.hidden=false;
+<script type="text/javascript">
+    function Check(form) {
+        if (form.contents.disabled==true && form.update.hidden==true){
+            form.contents.disabled=false
+            form.update.hidden=false;
         }
         else{
-            frm.contents.disabled=true;
-            frm.update.hidden=false;
+            form.contents.disabled=true
+            form.update.hidden=true;
         }
     }
 </script>
