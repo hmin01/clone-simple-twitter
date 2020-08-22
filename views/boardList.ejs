@@ -10,154 +10,157 @@
 <body>
 <style>
     table {
+        width: 60%;
+        height: 100px;
         border: 1px solid #444444;
-        width :60%;
-        height:100px;
         text-align: center;
     }
-     td {
+    td {
         border: 1px solid #444444;
+    }
+    form{
+        margin-left: 30%;
+        margin-right: 30%;
     }
 </style>
 
-<form method="post" enctype="multipart/form-data" name="form1">
+<form method="post" enctype="multipart/form-data" id ="uploadForm">
     <!-- //enctype="multipart/form-data" 로 설정해야 사용자가 전송한 파일을 서버로 전송할 수 있음
     //문자를 인코딩하지 않음을 명시함. 이 방식은 <form> 요소가 파일이나 이미지를 서버로 전송할 때 주로 사용함-->
-    <h1>Create</h1>
+    <%if(userId !=="0"){%>
+        <h1>Create</h1>
+
+        <div>
+            <textarea id ="createcontents" name="createcontents" style="resize:none;width: 60%; height: 100px;"></textarea>
+        </div>
+
+        <div>
+            <input type="file" id="image_path" name="image_path" value="image_path">
+        </div>
+
+        <div>
+            <input type="submit" id="create" value="create" name="create" formaction="/board/create">
+        </div>
+    <%}%>
+    <br>
+</form>
+<form method="post">
+    <% BoardContents.forEach(function(post,i) { %>
     <table>
         <tr>
-            <textarea id ="createcontents" name="createcontents" style="resize:none; width:500px; height:200px;"></textarea>
+            <%if(post.id == userId){%>
+                <input type ="text" hidden="" name="boardID" id="boardID" value="<%= post.b_id %>"/>
+                <td><input type ="button" name ="delete" id ="delete" value ="delete"/>
+                    <input type="button" id ="update_btn" name="update_btn" value="수정하기"/>
+                </td>
+            <%}%>
+
         </tr>
         <tr>
+            <td><%=post.name%></td>
+        </tr>
+        <tr>
+            <td><div id="mod_date" type ="date"><%=post.mod_date%></div></td>
+        </tr>
+
+        <tr>
             <td>
-                첨부파일
-            </td>
-            <td>
-                <input type="file" id="image_path" name="image_path" value="image_path">
+                <div id ="bf_contents_area" class="updatecontents" style="white-space: pre;"><%=post.contents%></div>
+                <textarea hidden="true" id="contents" name="contents" style="resize: none; width: 60%; height: 100px;"><%= post.contents %></textarea>
+                <input  type="button" hidden="true" id ="update" name="update" value="수정">
             </td>
         </tr>
-        <input type="button" id="create" value="create" name="create">
+        <tr>
+            <td><img src="../uploads/<%=post.image_path%>" style= "width: 60%; height:60%"/></td>
+        </tr>
     </table>
-</form>
-<form name="form2">
-    <br>
-    <% BoardContents.forEach(function(post) { %>
-        <table id = "contents_area">
-            <tr>
-                <%if(post.id == userId){%>
-                    <input type ="text" hidden="" name="boardID" id="boardID" value="<%= post.b_id %>"/>
-                <td><input type ="button" name ="delete" id ="delete" value ="delete"/>
-                    <input type="button" id ="update_btn" name="update_btn" value="수정하기" onclick="updateVisible(this.form)"/>
-                </td>
-                <%}%>
-
-            </tr>
-            <tr>
-                <td><%=post.name%></td>
-            </tr>
-            <tr>
-                <td><%=post.mod_date%></td>
-            </tr>
-
-            <tr>
-                <td>
-                    <div id ="bf_contents_area"><%=post.contents%></div>
-                    <!--<textarea id="bf_contents" name="bf_contents" style="resize: none; width: 500px; height: 100px;"><%=post.contents%></textarea>-->
-                    <textarea hidden="true" id="contents" name="contents" style="resize: none; width: 500px; height: 100px;"><%= post.contents %></textarea>
-                    <input  type="button" hidden="true" id ="update" name="update" value="수정">
-                </td>
-            </tr>
-            <tr>
-                <td><img src="../uploads/<%=post.image_path%>" style= "width: 60%; height:60%"/></td>
-            </tr>
-        </table>
     <br>
     <% }) %>
 </form>
 
-<script>
-    $('#update_btn').click(function () {
-        //$('#bf_contents').hidden();
+
+<!--<script type="text/javascript">
+    $(document).on("click","#update_btn",function () {
         $('#contents').show();
         $('#update').show();
     })
-</script>
-
-<!--<script>
-    $("#create").click(function a(){
-        $.ajax({
-            url: '/board/create',
-            type: 'GET',
-            success: function () {
-                location.href = './board/create'
-            },
-            error: function (err) {
-            }
-        })
-    });
 </script>-->
 
 <script>
-        $("#create").click(function () {
-            $.ajax({
-                url: '/board/create',
-                type: 'POST',
-                dataType: 'json',
-                data: {
-                    contents: $('#createcontents').val(),
-                    image_path: $('#image_path').val(),
-                },
-                success: function (data) {
-                    alert("성공");
-                    location.reload();
-                },
-                error: function (data) {
-                    console.log(data);
-                }
-            })
+    $("#create").submit(function () {
+        $.ajax({
+            url: '/board/create',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                contents: $('#contents').val(),
+                image_path: $('#image_path').val(),
+            },
+            success: function (data) {
+                location.reload();
+            },
+            error: function (data) {
+                alert("입력된 값이 없습니다");
+            }
+        })
     });
 </script>
 
 <script>
     $("#delete").click(function(){
-        $.ajax({
-            url: '/board/delete',
-            type: 'POST',
-            dataType: 'json',
-            data: {
-                b_id: $('#boardID').val(),
-            },
-            success: function (data) {
-                alert("삭제 되었습니다");
-                location.reload();
-            },
-            error: function (err) {
-            }
-        })
+        if(confirm('삭제하시겠습니까?')) {
+            $.ajax({
+                url: '/board/delete',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    b_id: $('#boardID').val(),
+                },
+                success: function (data) {
+                    alert("삭제 되었습니다");
+                    location.reload();
+                },
+                error: function (err) {
+                }
+            })
+        }
     });
 </script>
 
 <script>
-    $("#update").click(function(){
-        $.ajax({
-            url: '/board/update',
-            type: 'POST',
-            async: false,
-            dataType: 'json',
-            data: {
-                b_id: $('#boardID').val(),
-                contents: $('#contents').val(),
-            },
-            success: function (data,status, xhr) {
-                console.log(data);
-                $("#bf_contents_area").html(data);
+    $(document).on("click","#update_btn",function () {
+        $('#contents').show();
+        $('#update').show();
 
-            },
-            error: function (err) {
-            }
-        })
-    });
+        $("#update").click(function(){
+            $.ajax({
+                url: '/board/update',
+                type: 'POST',
+                async: false,
+                dataType: 'json',
+                data: {
+                    b_id: $('#boardID').val(),
+                    contents: $('#contents').val(),
+                    mod_date : $('#mod_date').val()
+                },
+                success: function (data,status, xhr) {
+                    $('#contents').hide();
+                    $('#update').hide();
+                    $('#bf_contents_area').text(
+                        data['CONTENTS']
+                    );
+                    $('#mod_date').text(
+                        data['MOD_DATE']
+                    )
+                },
+                error: function (err) {
+                }
+            })
+        });
+    })
+
 </script>
 
 </body>
 </html>
+

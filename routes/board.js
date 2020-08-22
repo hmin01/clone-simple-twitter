@@ -9,9 +9,16 @@ router.get('/',function (req, res) {
     query.boardList()
         .then(result=>{
             //console.log(result.message);
-            res.render('boardList', {
-                BoardContents : result.message,
-                userId :req.session.user.id});
+            if(req.session.user !== undefined){
+                res.render('boardList', {
+                    BoardContents : result.message,
+                    userId :req.session.user.id});
+            }
+            else{
+                res.render('boardList', {
+                    BoardContents : result.message, userId: "0"});
+            }
+
         }).catch(err=>{
             //console.log(err);
     })
@@ -48,17 +55,19 @@ router.get('/create',function (req, res) {
 
 
 //single :  fiedname에 명시된 단수 파일을 전달 받는다. --> 파일을 전달 받을건데, writing파일의 이미지 네임을 받는다. :
-router.post('/create',image_upload.single('image_path'),function (req, res) {
+router.post('/create',image_upload.single('image_path'),async function (req, res) {
 
     const Contents = {
-        contents : req.body.contents,
+        contents : req.body.createcontents,
         image_path : (req.file) ? req.file.filename : "",
         user_id : req.session.user.id
     }
-    console.log(Contents)
+    if(Contents.contents ==='' && Contents.image_path ===''){
+        res.send('<script>alert("입력 값이 없습니다.");location.href="/board";</script>');
+    }
     query.createContents(Contents).then(result =>{
         if(result.message.affectedRows === 1){
-            res.send({message:"success"});
+            res.send('<script>alert("트윗");location.href="/board";</script>');
         }
         else{
             res.send("err");
