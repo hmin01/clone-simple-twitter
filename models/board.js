@@ -2,7 +2,7 @@ const query = require('../helper/db/query');
 
 module.exports = {
     write: async (data) => {
-        const selectQ = `INSERT INTO BOARD(contents, image_path,reg_date,mod_date,user_id) VALUES('${data.contents}','${data.image_path}',NOW(),NOW(),'${data.user_id}')`;
+        const selectQ = `INSERT INTO BOARD(contents, image_path,reg_date,mod_date,user_id) VALUES('${data.contentswrite}','${data.image_path}',NOW(),NOW(),'${data.user_id}')`;
         return await query.selectSync(selectQ);
     },
     search: async () => {
@@ -12,6 +12,10 @@ module.exports = {
     update: async (data) => {
         const selectQ =`update board set contents = '${data.contents}' where b_id = '${data.b_id}'`;
         return await query.querySync(selectQ);
+    },
+    updateselect: async (data) => {
+        const selectQ =`SELECT contents from board  where b_id = '${data.b_id}'`;
+        return await query.selectSync(selectQ);
     },
     delete: async (data) => {
         const selectQ = `DELETE FROM board WHERE b_id = '${data.b_id}'`;

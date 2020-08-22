@@ -11,30 +11,9 @@
         <tr>
             <td><textarea id="contents" name="contents" style="resize: none; width: 500px; height: 100px;  "></textarea></td>
         </tr>
-        <td><input type="file" id="image_path" name="image_path"></td>
-        <td><input type="submit" id="write" value="write" name="write"></td>
+        <td><input type="file" id="image_path" name="image_path"><input type="submit" id="write" value="write" name="write"></td>
     </table>
 </form>
-<script type="javascript">
-    $(document).ready(function () {
-        $("#write").submit(function () {
-            $.ajax({
-                url: './write',
-                type: 'POST',
-                async: true,
-                dataType: 'json',
-                enctype: "multipart/form-data",
-                data: {
-                    contents : $('#contents').val(),
-                    image_path : $('#image_path').val(),
-                },
-                success: function (data) {
-                },
-                error: function (err) {
-                }
-            });
-        });
-    });
-</script>
+
 </body>
 </html>

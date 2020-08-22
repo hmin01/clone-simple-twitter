@@ -15,11 +15,46 @@
     td {
         border: 1px solid #444444;
     }
+    form{
+        margin-left: 30%;
+        margin-right: 30%;
+    }
 </style>
 <body>
-<h3>board</h3>
+<h3>Board</h3>
+<form id="writefrom" name="writefrom" method="POST" enctype="multipart/form-data">
+    <table>
+        <tr>
+            <td><textarea wrap="hard" id="contentswrite" name="contentswrite" style="resize: none; width: 500px; height: 100px;  "></textarea></td>
+        </tr>
+        <td><input type="file" id="image_path" name="image_path"><input type="submit" id="write" value="write" name="write" formaction="/board/write"></td>
+    </table>
+</form>
+<script>
+    $(document).ready(function () {
+        $("#write").submit(function () {
+            $.ajax({
+                url: '/board/write',
+                type: 'POST',
+                async: true,
+                dataType: 'json',
+                enctype: "multipart/form-data",
+                data: {
+                    contentswrite : $('#contentswrite').val(),
+                    image_path : $('#image_path').val(),
+                },
+                success: function (data) {
+                    alert("글쓰기를 완료했습니다.");
+                    location.reload();
+                },
+                error: function (err) {
+                }
+            });
+        });
+    });
+</script>
+
 <form id ="form" name = "form" method="post">
-    <input type ="button" name="write" value="write" id ="write"/>
     <% boardlist.forEach(function(post) { %>
     <div>
         <table>
@@ -28,15 +63,15 @@
                     <%=post.name%> <%=post.mod_date%>
                     <%if(post.id == userId){%>
                     <input type="button" id ="updateonbtn" name="updateonbtn"value="Edit" onclick="Check(this.form)">
-                        <input hidden="true"  type="button" id ="delete" name="delete" value="delete">
+                        <input type="button" id ="delete" name="delete" value="delete">
                     <%}%>
                 </td>
             </tr>
             <tr>
-                <input type="text" name ="b_id" value ='<%= post.b_id %>' id="b_id">
+                <input hidden="true" type="text" name ="b_id" value ='<%= post.b_id %>' id="b_id">
                 <td>
-                    <textarea disabled="true" id="contents" name="contents" style="resize: none; width: 500px; height: 100px;"><%= post.contents %></textarea>
-                    <input hidden="true"  type="button" id ="update" name="update" value="수정">
+                    <textarea  wrap="hard" id="contents" name="contents" style="resize: none; width: 500px; height: 100px;"><%= post.contents %></textarea>
+                    <input type="button" id ="update" name="update" value="수정">
                     <img src="../uploads/<%=post.image_path%>" style= "width: 15%; height:15%"/>
                 </td>
 
@@ -45,11 +80,11 @@
     </div>
     <% }) %>
 </form>
-<script type="text/javascript">
+<script type="javascript">
     function Check(form) {
-        if (form.contents.disabled==true && form.update.hidden==true){
-            form.contents.disabled=false
-            form.update.hidden=false;
+        if (form.contents.disabled == true && form.update.hidden == true){
+            form.contents.disabled = false
+            form.update.hidden = false;
         }
         else{
             form.contents.disabled=true
@@ -58,27 +93,9 @@
     }
 </script>
 <script>
-    $('#updateonbtn').click(function d() {
-        return $('contents').attr('disabled', false);
-    });
-</script>
-<script>
-    $("#write").click(function(){
-        $.ajax({
-            url: './board/write',
-            type: 'GET',
-            success: function () {
-                location.href="./board/write";
-            },
-            error: function (err) {
-            }
-        })
-    });
-</script>
-<script>
     $("#update").click(function(){
         $.ajax({
-            url: './board/update',
+            url: '/board/update',
             type: 'POST',
             async: false,
             dataType: 'json',
@@ -87,8 +104,12 @@
                 contents: $('#contents').val(),
             },
             success: function (data) {
+                alert("글쓰기를 수정완료 했습니다.");
+                location.reload();
             },
             error: function (err) {
+                alert("글이 없습니다.");
+                location.reload();
             }
         })
     });
@@ -96,17 +117,20 @@
 <script>
     $("#delete").click(function(){
         $.ajax({
-            url: './board/delete',
+            url: '/board/delete',
             type: 'POST',
             async: false,
             dataType: 'json',
             data: {
-                b_id: $('#b_id').val(),
-                contents: $('#contents').val(),
+                b_id: $('#b_id').val()
             },
             success: function (data) {
+                alert("삭제되었습니다.");
+                location.reload()
             },
             error: function (err) {
+                alert("삭제되지않았습니다.");
+                location.reload()
             }
         })
     });
