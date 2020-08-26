@@ -1,0 +1,75 @@
+body {
+    font-family:  'Patrick Hand', cursive;;
+}
+.breadcrumb-item {
+    font-size: 0.8em !important;
+}
+.ellipsis{
+    display: block;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.board-table {
+    table-layout: fixed;
+}
+.board-table .date {
+    width: 100px;
+}
+
+.post-body{
+    white-space: pre-line;
+}
+.post-info{
+    font-size: 0.8em;
+}
+
+.user-form {
+    width: 400px;
+}
+
+.button {
+    width:80px;
+    background-color: #f8585b;
+    border: none;
+    color:#fff;
+    padding: 15px 0;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 15px;
+    margin: 4px;
+    cursor: pointer;
+    board-radius :10px 0 10px 0;
+}
+
+.box-file-input label{
+    display:inline-block;
+    background:#23a3a7;
+    color:#fff;
+    padding:0px 15px;
+    line-height:35px;
+    cursor:pointer;
+}
+
+div {
+    margin: 10px 0px;
+    text-align: center;
+    font-family:  'Patrick Hand', cursive;;
+    font-style: italic;
+    font-size: 13px;
+}
+.a {
+    border: 4px dashed #bcbcbc;
+}
+
+.comment-edit,
+.comment-edit-enabled .comment-show {
+    display:none;
+}
+
+.comment-edit-enabled .comment-edit {
+    display:inherit;
+}

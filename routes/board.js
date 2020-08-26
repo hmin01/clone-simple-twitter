@@ -8,7 +8,7 @@ var mkfile = require('../helper/imagemkdir').file();
 router.get('/',function (req, res) {
     query.boardList()
         .then(result=>{
-            //console.log(result.message);
+            console.log(result.message);
             if(req.session.user !== undefined){
                 res.render('boardList', {
                     BoardContents : result.message,
@@ -61,9 +61,6 @@ router.post('/create',image_upload.single('image_path'),async function (req, res
         contents : req.body.createcontents,
         image_path : (req.file) ? req.file.filename : "",
         user_id : req.session.user.id
-    }
-    if(Contents.contents ==='' && Contents.image_path ===''){
-        res.send('<script>alert("입력 값이 없습니다.");location.href="/board";</script>');
     }
     query.createContents(Contents).then(result =>{
         if(result.message.affectedRows === 1){

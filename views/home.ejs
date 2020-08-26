@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
-    <title>twitter</title>
+    <%- include('./partials/head') %>
 </head>
 <body>
+<%- include('./partials/nav') %>
+<div class="container mb-3"/>
 <form method="GET">
-<h1>homepage</h1>
-    <input id = "btn_login" name ="login" value = "login" type ="button"/>
-    <input id = "btn_register" name ="register" value="register" type ="button"/>
+    <h3 class="contentBoxTop mb-3">homepage</h3>
+    <!--    <input id = "btn_login" name ="login" value = "login" type ="button"/>-->
+    <!--<input id = "btn_register" name ="register" value="register" type ="button"/>-->
 </form>
 
 <script>
@@ -17,7 +18,7 @@
             url: '/users/login',
             type: 'GET',
             success: function () {
-                location.href="./users/login";
+                location.href="/users/login";
             },
             error: function (err) {
             }

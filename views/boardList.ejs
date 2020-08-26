@@ -1,35 +1,18 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
-    <meta charset="UTF-8">
+    <!-- my css -->
+
+        <%- include('./partials/head') %>
+  <!--  <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>-->
 </head>
-<script>
 
-</script>
 <body>
-<style>
-    table {
-        width: 60%;
-        height: 100px;
-        border: 1px solid #444444;
-        text-align: center;
-    }
-    td {
-        border: 1px solid #444444;
-    }
-    form{
-        margin-left: 30%;
-        margin-right: 30%;
-    }
-</style>
-
-<form method="post" enctype="multipart/form-data" id ="uploadForm">
+<%- include('./partials/nav_login') %>
+<form method="post" enctype="multipart/form-data" id ="uploadForm" onsubmit="return check()">
     <!-- //enctype="multipart/form-data" 로 설정해야 사용자가 전송한 파일을 서버로 전송할 수 있음
     //문자를 인코딩하지 않음을 명시함. 이 방식은 <form> 요소가 파일이나 이미지를 서버로 전송할 때 주로 사용함-->
     <%if(userId !=="0"){%>
-        <h1>Create</h1>
-
         <div>
             <textarea id ="createcontents" name="createcontents" style="resize:none;width: 60%; height: 100px;"></textarea>
         </div>
@@ -39,52 +22,72 @@
         </div>
 
         <div>
-            <input type="submit" id="create" value="create" name="create" formaction="/board/create">
+            <input  class="button" type="submit" id="create" value="create" name="create" formaction="/board/create">
         </div>
     <%}%>
     <br>
 </form>
 <form method="post">
-    <% BoardContents.forEach(function(post,i) { %>
-    <table>
-        <tr>
-            <%if(post.id == userId){%>
-                <input type ="text" hidden="" name="boardID" id="boardID" value="<%= post.b_id %>"/>
-                <td><input type ="button" name ="delete" id ="delete" value ="delete"/>
-                    <input type="button" id ="update_btn" name="update_btn" value="수정하기"/>
-                </td>
-            <%}%>
-
+    <!-- 보드 시작 -->
+    <% BoardContents.forEach(function(post) { %>
+    <table class="board-table table table-sm board-bottom" style=" text-aline:center; width:80%; margin-right: 60px; margin-left:60px">
+        <tr class="thead-light" style="text-align: center">
+            <th colspan="2"><input type ="text" hidden="" id="board_id" value="<%=post.b_id%>"/></th>
         </tr>
-        <tr>
-            <td><%=post.name%></td>
+        <tr class="thead-light" style="text-align: center">
+            <th><div>NAME</div></th>
+            <th><div><%=post.name%></div></th>
         </tr>
-        <tr>
-            <td><div id="mod_date" type ="date"><%=post.mod_date%></div></td>
+        <tr class="thead-light" style="text-align: center">
+            <td><div>DATE</div></td>
+            <td><div id ="mod_date"><%=post.mod_date%></div></td>
         </tr>
-
-        <tr>
-            <td>
-                <div id ="bf_contents_area" class="updatecontents" style="white-space: pre;"><%=post.contents%></div>
-                <textarea hidden="true" id="contents" name="contents" style="resize: none; width: 60%; height: 100px;"><%= post.contents %></textarea>
-                <input  type="button" hidden="true" id ="update" name="update" value="수정">
+        <tr class="thead-light" style="text-align: center">
+            <!--<th>COTNETS</th>-->
+            <td colspan="2"> <div id ="orig_contents" class="updatecontents" style="white-space: pre;"><%=post.contents%></div>
+                <textarea id="contents" name="contents" style="display:none;resize: none; width: 100%; border:0; height: 100px; white-space: pre"><%= post.contents %></textarea>
             </td>
         </tr>
+        <div style="padding: 10px"></div>
         <tr>
-            <td><img src="../uploads/<%=post.image_path%>" style= "width: 60%; height:60%"/></td>
+            <%if(post.image_path !=='') {%>
+            <th colspan="2" style="text-align: center"><img src="/uploads/<%=post.image_path%>" style= "width: 30%; height:30%"/></th>
+            <%}%>
         </tr>
+        <%if(userId === post.id){  %>
+        <input class="button" type="button" id="board_delete" value="delete" b_id ='<%=post.b_id%>'>
+            <input class="button" type="button" id="comment_update" value="update" name="updateComment" >
+        <%}%>
     </table>
+</form>
+<form>
     <br>
+    <div>
+        <form id="commentForm" method="post">
+            <input type="hidden" id ="board_id" name="board_id" value="<%=post.board_id%>" />
+            <input type="hidden" id="user_name" name="user_name" value="<%=userId%>">
+            <!--<input type="text" name="comment" width ="700px"/>
+            <input class="button" type="submit" value="댓글작성" name ="submit" style="margin-top: 10px">-->
+        </form>
+    </div>
     <% }) %>
 </form>
 
+<script>
+    function check() {
+       if(document.getElementById('#createcontents') && document.getElementById('#image_path')){
+           alert("내용을 입력해 주세요");
+           return false;
+       }
+    }
+</script>
 
-<!--<script type="text/javascript">
+<script type="text/javascript">
     $(document).on("click","#update_btn",function () {
         $('#contents').show();
         $('#update').show();
     })
-</script>-->
+</script>
 
 <script>
     $("#create").submit(function () {
@@ -107,56 +110,55 @@
 </script>
 
 <script>
-    $("#delete").click(function(){
+    $(document).on('click','#board_delete',function () {
         if(confirm('삭제하시겠습니까?')) {
+            var $conn = $(this);
             $.ajax({
                 url: '/board/delete',
                 type: 'POST',
                 dataType: 'json',
                 data: {
-                    b_id: $('#boardID').val(),
+                    b_id: $conn.attr('b_id')
                 },
                 success: function (data) {
-                    alert("삭제 되었습니다");
+                    console.log(data);
+                    //포함하고있는 폼을 삭제한다.
+                    $conn.parent().remove();
+                    alert("삭제되었습니다");
                     location.reload();
                 },
                 error: function (err) {
                 }
             })
         }
-    });
+    })
 </script>
 
 <script>
-    $(document).on("click","#update_btn",function () {
-        $('#contents').show();
-        $('#update').show();
-
-        $("#update").click(function(){
-            $.ajax({
-                url: '/board/update',
-                type: 'POST',
-                async: false,
-                dataType: 'json',
-                data: {
-                    b_id: $('#boardID').val(),
-                    contents: $('#contents').val(),
-                    mod_date : $('#mod_date').val()
-                },
-                success: function (data,status, xhr) {
-                    $('#contents').hide();
-                    $('#update').hide();
-                    $('#bf_contents_area').text(
-                        data['CONTENTS']
-                    );
-                    $('#mod_date').text(
-                        data['MOD_DATE']
-                    )
-                },
-                error: function (err) {
-                }
-            })
-        });
+    $("#update").click(function(){
+        $.ajax({
+            url: '/board/update',
+            type: 'POST',
+            async: false,
+            dataType: 'json',
+            data: {
+                b_id: $('#boardID').val(),
+                contents: $('#contents').val(),
+                mod_date : $('#mod_date').val()
+            },
+            success: function (data,status, xhr) {
+                $('#contents').hide();
+                $('#update').hide();
+                $('#bf_contents_area').text(
+                    data['CONTENTS']
+                );
+                $('#mod_date').text(
+                    data['MOD_DATE']
+                )
+            },
+            error: function (err) {
+            }
+        })
     })
 
 </script>

@@ -6,10 +6,14 @@ var hash = require('../helper/hash').hashValue;
 /* GET users listing. */
 router.get('/', (req, res) => {
   //res.send('respond with a resource');
-    res.render('../views/home');
+    if(req.session.user !== undefined){
+      res.render('../views/mainhome',{userId : req.session.user.user_id});
+    }
+   else {
+     res.render('../views/home');
+    }
 });
 
-/*
 router.get('/mainhome', (req, res) => {
   console.log(11111);
   console.log(req.session.user.email);
@@ -22,7 +26,6 @@ router.get('/mainhome', (req, res) => {
     res.render('../views/login');
   }
 });
-*/
 
 router.post('/mainhome',(req, res)=>{
   res.redirect('./profile');
@@ -138,4 +141,10 @@ router.post('/update',(req,res)=>{
   });
 });
 
+router.get('/logout',(req,res)=>{
+  req.session.destroy(function(err) {
+    // cannot access session here
+  })
+  res.redirect('/');
+})
 module.exports = router;

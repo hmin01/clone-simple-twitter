@@ -1,46 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
-    <title>Document</title>
+    <%- include('./partials/head') %>
 </head>
 <body>
-<h3>회원 가입</h3>
-<form method="post" onsubmit=" return check()">
-    <table>
-        <tr>
-            <td>이름 : </td>
-            <td><input type="text" name="name" id="name"></td>
-        </tr>
-        <tr>
-            <td>이메일 : </td>
-            <td><input type="email" name="email" id="email"></td>
-        </tr>
-        <tr>
-            <td>비밀번호: </td>
-            <td><input type="password" name="password" id="password"></td>
-        </tr>
-        <tr>
-            <td>비밀번호 확인 : </td>
-            <td><input type="password" name="passwordRe" id="passwordRe"></td>
-            <td><label id="chkNotice" size="10"></label></td>
-        </tr>
-        <tr>
-            <td>전화번호 : </td>
-            <td><input type="text" name="phonenumber" id="phonenumber"></td>
-        </tr>
-        <tr>
-            <td>성별 : </td>
-            <td><input type="radio" name ="gender" value ='0' id="gender">여</td>
-            <td><input type="radio" name ="gender" value ='1' id="gender">남</td>
-        </tr>
-        <tr>
-            <td><input type="submit" id="register" value="회원가입"></td>
-        </tr>
-    </table>
-</form>
-
+<%- include('./partials/nav') %>
+<div class="container mb-3">
+    <h3 class="contentBoxTop mb-3">회원 가입</h3>
+    <form method="post" onsubmit=" return check()">
+        <table>
+            <tr>
+                <td>이름 : </td>
+                <td><input type="text" name="name" id="name"></td>
+            </tr>
+            <tr>
+                <td>이메일 : </td>
+                <td><input type="email" name="email" id="email"></td>
+            </tr>
+            <tr>
+                <td>비밀번호: </td>
+                <td><input type="password" name="password" id="password"></td>
+            </tr>
+            <tr>
+                <td>비밀번호 확인 : </td>
+                <td><input type="password" name="passwordRe" id="passwordRe"></td>
+                <td><label id="chkNotice" size="10"></label></td>
+            </tr>
+            <tr>
+                <td>전화번호 : </td>
+                <td><input type="text" onKeyup="inputPhoneNumber(this)" name="phonenumber" maxlength="13" id="phonenumber">
+            </tr>
+            <tr>
+                <td>성별 : </td>
+                <td><input type="radio" name ="gender" value ='0' id="gender">여</td>
+                <td><input type="radio" name ="gender" value ='1' id="gender">남</td>
+            </tr>
+            <tr>
+                <td><input class="button" type="submit" id="register" value="회원가입"></td>
+            </tr>
+        </table>
+    </form>
+</body>
 <script type="text/javascript">
     function check() {
         var pw = document.getElementById("password").value;
@@ -78,7 +78,7 @@
 <script>
     $("#register").submit(function(){
         $.ajax({
-            url:'./register',//주
+            url:'/users/register',//주
             type: 'POST',
             async: false,
             dataType :'json',
@@ -92,7 +92,8 @@
                 profile : $('#profile').val()
             },
             success: function (data) {
-                var jsonObj = JSON.parse(data);
+                //var jsonObj = JSON.parse(data);
+                location.href ="/users/login"
             },
             error: function (err) {
 
@@ -100,6 +101,34 @@
         });
     });
 </script>
+<script>
+    function inputPhoneNumber(obj) {
 
-</body>
+        var number = obj.value.replace(/[^0-9]/g, "");
+        var phone = "";
+
+        if(number.length < 4) {
+            return number;
+        } else if(number.length < 7) {
+            phone += number.substr(0, 3);
+            phone += "-";
+            phone += number.substr(3);
+        } else if(number.length < 11) {
+            phone += number.substr(0, 3);
+            phone += "-";
+            phone += number.substr(3, 3);
+            phone += "-";
+            phone += number.substr(6);
+        } else {
+            phone += number.substr(0, 3);
+            phone += "-";
+            phone += number.substr(3, 4);
+            phone += "-";
+            phone += number.substr(7);
+        }
+        obj.value = phone;
+    }
+</script>
+
+
 </html>

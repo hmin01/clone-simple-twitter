@@ -1,39 +1,18 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
-    <title> mainhome </title>
+    <%- include('./partials/head') %>
 </head>
-<style>
-    table {
-        border: 1px solid #444444;
-        width :60%;
-        height:100px;
-        text-align: center;
-    }
-    td {
-        border: 1px solid #444444;
-    }
-</style>
-
 <body>
-<form method="POST">
+<%- include('./partials/nav_login') %>
+<form method="GET">
+    <div class="container mb-3"/>
+
     <div>
-        <p><%= email%>반갑습니다.</p>
-        <input type="button" name ="profile" value = "profile" id="profile"/>
+        <p><a href = '/users/profile'><%= email%>반갑습니다.</a></p>
     </div>
+
 </form>
-<script>
-    $("#profile").click(function(){
-        $.ajax({
-            url:'./profile',//주
-            type: 'POST',
-            success: function () {
-                location.href ='./profile';
-            },
-            error: function (err) {
-            }
-        });
-    });
-</script>
 </body>
+
+</html>
