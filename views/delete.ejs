@@ -21,7 +21,7 @@
 <script>
     $("#delete").submit(function(){
         $.ajax({
-            url:'/delete',//주
+            url:'/users/delete',//주
             type: 'POST',
             async: false,
             dataType :'json',
@@ -29,6 +29,8 @@
                 password:$('#password').val()
             },
             success: function (data) {
+                alert("성공");
+                location.href='/';
             },
             error: function (err) {
             }

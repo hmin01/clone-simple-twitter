@@ -13,10 +13,10 @@
 <script>
     $("#btn_login").click(function(){
         $.ajax({
-            url: './users/login',
+            url: '/users/login',
             type: 'GET',
             success: function () {
-                location.href="./users/login";
+                location.href="/users/login";
             },
             error: function (err) {
             }
@@ -27,10 +27,10 @@
 <script>
     $("#btn_register").click(function(){
         $.ajax({
-            url: './users/register',
+            url: '/users/register',
             type: 'GET',
             success: function () {
-                location.href="./users/register";
+                location.href="/users/register";
             },
             error: function (err) {
             }

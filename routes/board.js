@@ -65,9 +65,7 @@ router.post('/update', (req,res,next)=>{
         .then(_result => {
             if(_result.message.affectedRows == 1){
                 query.updateselect(updateInfo).then(result => {
-
                     console.log(result.message[0]);
-
                     res.send({result: result.message[0]});
                 });
             }else{

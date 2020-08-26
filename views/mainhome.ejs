@@ -1,29 +1,30 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+    <%- include('./partials/head.ejs') %>
+    <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
     <title> mainhome </title>
 </head>
+<style>
+    body {
+        text-align: center;
+    }
+    form {
+        margin: 0 auto;
+        width:250px;
+    }
+</style>
+
 <body>
-<form method="POST">
-<div>
-    <p><%= email%>반갑습니다.</p>
-    <input type="button" name ="profile" value = "profile" id="profile"/>
-    <td><a href="../board">글쓰기</a></td>
+<%- include('./partials/nav_l.ejs') %>
+<div class="container mb-3">
+    <div class="jumbotron">
+        <form method="POST">
+            <div>
+                <%= email%>반갑습니다.</p>
+            </div>
+        </form>
+    </div>
 </div>
-</form>
-<script>
-    $("#profile").click(function(){
-        $.ajax({
-            url:'./profile',//주
-            asycn: false,
-            type: 'POST',
-            success: function (data) {
-            },
-            error: function (err) {
-                alert(data);
-            }
-        });
-    });
-</script>
 </body>
+</html>

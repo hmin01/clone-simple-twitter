@@ -16,6 +16,4 @@ module.exports = {
         const deleteQ = `DELETE FROM USER WHERE email = '${data.email}' and password = '${data.password}'`;
         return await query.querySync(deleteQ);
     }
-
-
 };

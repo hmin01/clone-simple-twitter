@@ -2,60 +2,68 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
+    <%- include('./partials/head.ejs') %>
     <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
     <title>프로필</title>
-    <a href="./mainhome" height="5" width="5">
-        <img src="bird.png"/>
-    </a>
 </head>
-<body>
-<form method="POST">
-<h3>프로필</h3>
-    <table>
-        <tr>
-            <td>이름 : </td>
-            <td><%=name%></td>
-        </tr>
-        <tr>
-            <td>email : </td>
-            <td><%=email%></td>
-        </tr>
-        <tr>
-            <td>전화 번호 : </td>
-            <td><%=phonenumber%></td>
-        </tr>
-        <tr>
-            <td>성별 : </td>
-            <td> <%=gender = 0 ?"남자" : "여자" %></td>
-        </tr>
-        <tr>
-            <td>등록 : </td>
-            <td><%=registerdate%></td>
-        </tr>
-        <tr>
-            <td>프로필 : </td>
-            <td><%=profile%></td>
-        </tr>
-        <tr>
-            <td><input type ="submit" value="수정" id = "update"></td>
-            <td><a href="./delete">회원탈퇴바로가기</a></td>
-       </tr>
-    </table>
-</form>
+<style>
+    form{
+        text-align: center;
+    }
 
+</style>
+<body>
+<%- include('./partials/nav_l.ejs') %>
+
+<div class="container mb-3">
+    <div class="jumbotron">
+
+        <form method="POST">
+            <h3>프로필</h3>
+            <table style="margin-left: auto; margin-right: auto;">
+                <tr>
+                    <td>이름 : </td>
+                    <td><%=name%></td>
+                </tr>
+                <tr>
+                    <td>email : </td>
+                    <td><%=email%></td>
+                </tr>
+                <tr>
+                    <td>전화 번호 : </td>
+                    <td><%=phonenumber%></td>
+                </tr>
+                <tr>
+                    <td>성별 : </td>
+                    <td> <%=gender = 0 ?"남자" : "여자" %></td>
+                </tr>
+                <tr>
+                    <td>등록 : </td>
+                    <td><%=registerdate%></td>
+                </tr>
+                <tr>
+                    <td><input type ="submit" value="수정" id = "update"></td>
+                    <td><a href="./delete">회원탈퇴바로가기</a></td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</div>
 <script>
     $("#update").submit(function(){
         $.ajax({
             url:'./profile',//주
             type: 'POST',
             async: false,
-            dataType :'json',
             success: function (data) {
+                alert("성공");
+                location.href ='./update'
             },
             error: function (err) {
             }
         });
     });
 </script>
+
 </body>
 </html>
