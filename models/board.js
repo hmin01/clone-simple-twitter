@@ -35,7 +35,7 @@ module.exports = {
         return await query.querySync(commetInput);
     },
     selectComment : async(data) =>{
-        const suchBoardComment = `SELECT comments.contents,comments.comm_id,comments.user_id,users.name,date_format(comments.reg_date,'%Y-%m-%d') from comment INNER JOIN users on users.id = comments.user_id where comments.b_id = '${data.b_id}'ORDER BY comments.reg_date ASC`;
+        const suchBoardComment = `SELECT comment.contents,comment.com_id,comment.b_id,comment.user_id,user.name,date_format(comment.reg_date,'%Y-%m-%d') from comment INNER JOIN user on user.id = comment.user_id where comment.b_id = '${data.b_id}'ORDER BY comment.reg_date ASC`;
         //console.log(suchBoardComment);
         return await query.selectSync(suchBoardComment);
     },

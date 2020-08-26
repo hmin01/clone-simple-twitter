@@ -97,4 +97,11 @@ router.post('/update', (req,res,next)=>{
 
 });
 
+router.post('/lookcomment',(req,res,next)=>{
+    query.selectComment({b_id: req.body.b_id}).then(result =>{
+       // console.log(result.message);
+        res.send({comments : result.message})
+    })
+})
+
 module.exports = router;

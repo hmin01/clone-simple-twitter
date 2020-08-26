@@ -27,9 +27,14 @@
     <%}%>
     <br>
 </form>
+
 <form method="post">
     <!-- 보드 시작 -->
     <% BoardContents.forEach(function(post) { %>
+    <%if(userId === post.id){  %>
+    <input class="button" type="button" id="board_delete" value="delete" b_id ='<%=post.b_id%>'>
+    <input class="button" type="button" id="update_btn<%=post.b_id%>" value="update" name="update_btn">
+    <%}%>
     <table class="board-table table table-sm board-bottom" style=" text-aline:center; width:80%; margin-right: 60px; margin-left:60px">
         <tr class="thead-light" style="text-align: center">
             <th colspan="2"><input type ="text" hidden="" id="board_id" value="<%=post.b_id%>"/></th>
@@ -45,7 +50,7 @@
         <tr class="thead-light" style="text-align: center">
             <!--<th>COTNETS</th>-->
             <td colspan="2"> <div id ="orig_contents" class="updatecontents" style="white-space: pre;"><%=post.contents%></div>
-                <textarea id="contents" name="contents" style="display:none;resize: none; width: 100%; border:0; height: 100px; white-space: pre"><%= post.contents %></textarea>
+                <textarea id="contents<%=post.b_id%>" name="contents" style="display:none; resize: none; width: 100%; border:0; height: 100px; white-space: pre"><%= post.contents %></textarea>
             </td>
         </tr>
         <div style="padding: 10px"></div>
@@ -54,28 +59,35 @@
             <th colspan="2" style="text-align: center"><img src="/uploads/<%=post.image_path%>" style= "width: 30%; height:30%"/></th>
             <%}%>
         </tr>
-        <%if(userId === post.id){  %>
-        <input class="button" type="button" id="board_delete" value="delete" b_id ='<%=post.b_id%>'>
-            <input class="button" type="button" id="comment_update" value="update" name="updateComment" >
-        <%}%>
     </table>
+    <input class="button" type ="button" id ="lookingComment" value="댓글" b_id="<%=post.b_id%>">
+</form>
+<form>
+    <div id="comment_area<%=post.b_id%>" name="comment_area<%=post.id%>">
+
+    </div>
 </form>
 <form>
     <br>
     <div>
         <form id="commentForm" method="post">
-            <input type="hidden" id ="board_id" name="board_id" value="<%=post.board_id%>" />
+            <input type="hidden" id ="b_id" name="b_id" value="<%=post.b_id%>" />
             <input type="hidden" id="user_name" name="user_name" value="<%=userId%>">
             <!--<input type="text" name="comment" width ="700px"/>
             <input class="button" type="submit" value="댓글작성" name ="submit" style="margin-top: 10px">-->
         </form>
     </div>
-    <% }) %>
+</form>
+<% }) %>
+<form>
+
 </form>
 
-<script>
+<script type="text/javascript">
     function check() {
-       if(document.getElementById('#createcontents') && document.getElementById('#image_path')){
+        var contentsCheck = document.getElementById("createcontents").value;
+        var imageCheck = document.getElementById('image_path').value;
+        if(!contentsCheck && !imageCheck){
            alert("내용을 입력해 주세요");
            return false;
        }
@@ -83,12 +95,15 @@
 </script>
 
 <script type="text/javascript">
-    $(document).on("click","#update_btn",function () {
-        $('#contents').show();
-        $('#update').show();
+    $(document).on("click","[id^=update_btn]",function () {
+        console.log(this.id);
+        console.log(this);
+        //$('in').show();
+        //$('#update').show();
+        //$('#orig_contents').hide();
+        //$('#board_delete').hide();
     })
 </script>
-
 <script>
     $("#create").submit(function () {
         $.ajax({
@@ -125,12 +140,42 @@
                     //포함하고있는 폼을 삭제한다.
                     $conn.parent().remove();
                     alert("삭제되었습니다");
-                    location.reload();
                 },
                 error: function (err) {
                 }
             })
         }
+    })
+</script>
+<script>
+    $(document).on('click', '#lookingComment',function () {
+        var $conn = $(this);
+        $.ajax({
+            url :'/board/lookcomment',
+            type :  'POST',
+            dataType : 'json',
+            data:{
+                b_id : $conn.attr('b_id'),
+
+            },
+            success : function (comments) {
+                $.each(comments , function(key, comment) {
+                    for(var i=0; i<comment.length;i++){
+                        var classId = "comment_area" + comment[i].b_id
+                        console.log(classId);
+                    // 안에 넣을 dom 생성
+                    var addContent = $(
+                        '<input type="hidden" id="comment_id" name="comment_id" value="' + comment[i].com_id + '>'
+                        + '<div class="a">'+
+                        '<div>'+comment[i].contents +'</div>'
+                        +'<div>작성자 : '+comment[i].name+'</div>'
+                        +'<div>작성시간 : ' + comment[i]["date_format(comment.reg_date,'%Y-%m-%d')"] + '</div>');
+                    // dom에 생성한 dom 추가
+                    $("#classId").append(addContent);
+                    }
+                });
+            }
+        })
     })
 </script>
 
