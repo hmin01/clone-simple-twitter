@@ -59,8 +59,8 @@
 
 <form id ="form" name = "form" method="post">
     <% BoardContents.forEach(function(post) { %>
-    <div>
-        <table style="margin-left: auto; margin-right: auto;">
+
+    <table style="margin-left: auto; margin-right: auto;">
             <tr>
                 <th>
                     <%=post.name%> <%=post["date_format(board.mod_date, '%Y-%m-%d %h:%i:%s')"]%>
@@ -76,82 +76,72 @@
                     <textarea  wrap="hard" id="contents<%=post.b_id%>" name="contents" style="resize: none; width: 500px; height: 100px;"><%= post.contents %></textarea>
                     <img src="../uploads/<%=post.image_path%>" style= "width: 15%; height:15%"/>
                 </td>
-            </tr>
-        </table>
-    </div>
+                <td>
+                    <input type="button" id ="lookcomment" name="lookcomment" value="댓글보기" b_id='<%=post.b_id%>'>
+                </td>
+                <td>
+                    <input type="hidden" id ="b_id" name="b_id" value="<%=post.b_id%>">
+                    <input type="hidden" id = "name" name="name" value="<%=post.name%>">
+                    <input hidden="true" type="date" name="reg_date" id="reg_date">
+                    <textarea wrap="hard" name="comment"  id="comment" style="resize:none; width:400px; height:100px; border:0;"></textarea>
+                    <input type="button" value="댓글작성" name ="commentsubmit" id="commentsubmit" style="margin-top: 10px">
+                </td>
 
+            </tr>
+    </table>
+    <% }) %>
 </form>
-        <form id="commentForm" method="post">
-            <input type="hidden" id ="b_id" name="b_id" value="<%=post.b_id%>">
-            <input type="hidden" id = "name" name="name" value="<%=post.name%>">
-            <input hidden="true" type="date" name="reg_date" id="reg_date">
-            <textarea wrap="hard" name="comment"  style="resize:none; width:400px; height:100px; border:0;"></textarea>
-            <input type="submit" value="댓글작성" name ="submit" style="margin-top: 10px">
-        </form>
-        <% }) %>
-        <form>
-            <div id="comment_area">
-                <% comments.forEach(function(comment){ %>
-                <input type="hidden" id="c_id" name="c_id" value="<%=comment.com_id%>">
-                <div class="a">
-                    <div><%=comment.name%> (<%= comment["date_format(comments.reg_date, '%Y-%m-%d %h:%i:%s')"]%>)</div>
-                    <div> <%= comment.contents%></div>
-                    <%if(userId === comment.u_id){%>
-                    <textarea  id="upcomment<%=comment.c_id%>" name="upcomment" style="resize: none; width: 50%; border:0; height: 50px;white-space: pre;"><%= comment.contents %></textarea>
-                    <input  type="button" id="comment_delete" value="delete" comment_id ='<%=comment.com_id%>'>
-                    <input  type="button" name="updateComment" value="update" id="updateComment" comment_id ='<%=comment.com_id%>'>
-                    <%}%>
-                </div>
-                <%})%>
-            </div>
-        </form>
     </div>
 </div>
 <script>
-    const datetime = new Date();
-    document.getElementById("reg_date").value = datetime.getFullYear() + "-" + datetime.getMonth()+1 + "-" + datetime.getDay()+"  "+datetime.getHours() +":"+datetime.getMinutes() +":"+datetime.getSeconds();
-    (function(){
-        $(document).ready(function() {
-            $('#commentForm').submit(function(){
-                var $comment =  $(this).children('textarea[name=comment]').val();
-                if($comment){
-                    $.ajax({
-                        url: '/board/comment',
-                        type: 'POST',
-                        data: $(this).serialize(),
-                        success : (function(data) {
-                            console.log(data);
-                            $('#comment_area').append(
-                                '<div>' + data.name +'('+data.reg_date  +')'+'</div>'+
-                                '<div>' + data.comment + '</div>');
-                            $('#commentForm textarea[name=comment]').val("");
-                            alert('댓글작성이 완료되었습니다.');
-                            //location.reload();
-                        }),
-                        error : (function(err) {
-                        })
-                    })
-                }else{
-                    alert('댓글 내용을 입력해주세요.')
+    $(document).on('click','#lookcomment',function () {
+        if(confirm('댓글을 보시겠습니까?')) {
+            var $conn = $(this);
+            $.ajax({
+                url: '/board/lookcomment',
+                type: 'POST',
+                async: false,
+                dataType: 'json',
+                data: {
+                    b_id: $conn.attr('b_id'),
+                },
+                success: function (data) {
+                    location.reload();
+                },
+                error: function (err) {
+                    alert("통신실패");
                 }
-                return false;
             });
-        });
-    })();
+        }
+    });
 </script>
 
-<script type="javascript">
-    function Check(form) {
-        if (form.contents.disabled == true && form.update.hidden == true){
-            form.contents.disabled = false
-            form.update.hidden = false;
+<script>
+    const datetime = new Date();
+    $(document).on('click', '#commentsubmit', function () {
+        if (confirm('댓글을 작성하겠습니까?')) {
+            $.ajax({
+                url: '/board/comment',
+                type: 'POST',
+                data: {
+                    b_id: $('#b_id').val(),
+                    reg_date: document.getElementById("reg_date").value = datetime.getFullYear() + "-" + datetime.getMonth() + 1 + "-" + datetime.getDay() + "  " + datetime.getHours() + ":" + datetime.getMinutes() + ":" + datetime.getSeconds(),
+                    comment: $('#comment').val()
+                },
+                success: (function (data) {
+                    console.log(data);
+                    alert('댓글작성이 완료되었습니다.');
+                    location.reload();
+                }),
+                error: (function (err) {
+                })
+            })
+        } else {
+            alert('댓글 내용을 입력해주세요.')
         }
-        else{
-            form.contents.disabled=true
-            form.update.hidden=true;
-        }
-    }
+    });
 </script>
+
 <script>
     $(document).on('click','#update',function () {
         if(confirm('수정하시겠습니까?')) {

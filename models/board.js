@@ -22,12 +22,13 @@ module.exports = {
         return await query.querySync(selectQ);
     },
     comment : async (data) =>{
-        const createQ =`insert into COMMENT(reg_date,b_id,u_id, contents) VALUES(NOW(),'${data.b_id}','${data.u_id}','${data.comment}')`;
+        const createQ =`insert into COMMENT(reg_date,b_id,user_id, contents) VALUES(NOW(),'${data.b_id}','${data.user_id}','${data.comment}')`;
+        console.log(createQ);
         return await query.querySync(createQ);
 
     },
     selectComment : async (data) =>{
-        const createQ = `select USER.id, user.name, comment.com_id, comment.b_id, date_format(comment.reg_date, '%Y-%m-%d %h:%i:%s'), comment.user_id, COMMENT.contents from COMMENT inner join user on comment.user_id = user.id where b_id = '${data.b_id}' ORDER BY comment.reg_date DESC;`;
+        const createQ = `select user.id, user.name, comment.com_id, comment.b_id, date_format(comment.reg_date, '%Y-%m-%d %h:%i:%s'), comment.user_id, COMMENT.contents from COMMENT inner join user on comment.user_id = user.id where b_id = '${data.b_id}' ORDER BY comment.reg_date DESC`;
         return await query.querySync(createQ);
     },
     deleteComment : async(data) =>{

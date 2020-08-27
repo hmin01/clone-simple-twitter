@@ -5,10 +5,47 @@ var filemkdir = require('../helper/imagemkdir').filemkdir();
 const query = require('../models/board');
 
 router.get('/', function(req, res, next) {
+    query.boardList().then(boardR=>{
+        if(req.session.user !== undefined){
+            res.render('boardlist', {
+                BoardContents: boardR.message,
+                userId: req.session.user.id,
+                name: req.session.user.name
+            });
+        }else{
+
+        }
+        }).catch(err=>{
+        res.send({message : err});
+    })
+});
+
+router.post('/lookcomment',function (req,res,next) {
+    query.selectComment({b_id : req.body.b_id}).then(commentR=>{
+        if(req.session.user !== undefined){
+            console.log(commentR);
+            res.render('boardlist', {
+                comments:commentR.message,
+                userId: req.session.user.id,
+                name: req.session.user.name
+            });
+        }
+        else{
+            res.render('boardlist', {
+                userId: 0, comments : commentR.message, name:0
+            });
+        }
+    }).catch(err=>{
+        res.send({message : err});
+    })
+})
+
+/*
+router.get('/list/:b_id',function (req,res) {
     query.boardList()
         .then(boardR=>{
-            query.selectComment({board_id:req.params.board_id}).then(commentR=>{
-                console.log(commentR);
+            query.selectComment({b_id: req.params.b_id}).then(commentR=>{
+                console.log(commentR.message);
                 if(req.session.user !== undefined){
                     res.render('boardlist', {
                         BoardContents : boardR.message,
@@ -29,6 +66,9 @@ router.get('/', function(req, res, next) {
         res.send({message : err});
     })
 });
+*/
+
+
 
 router.post('/comment', function(req,res){
     const commentInfo = {
@@ -37,7 +77,9 @@ router.post('/comment', function(req,res){
         user_id: req.session.user.id,
         name: req.session.user.name
     }
+    console.log(commentInfo);
     query.comment(commentInfo).then(message=>{
+        console.log(message);
         if(message.message.affectedRows ===1){
             res.send({
                 user_id : req.session.user.id, comment : req.body.comment,
