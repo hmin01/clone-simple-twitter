@@ -21,6 +21,10 @@ module.exports = {
         const selectQ = `DELETE FROM board WHERE b_id = '${data.b_id}'`;
         return await query.querySync(selectQ);
     },
+    boardRead:async (data) =>{
+        const selectQ = `select * from board where b_id = '${data.b_id}'`;
+        return await query.selectSync(selectQ);
+    },
     comment : async (data) =>{
         const createQ =`insert into COMMENT(reg_date,b_id,user_id, contents) VALUES(NOW(),'${data.b_id}','${data.user_id}','${data.comment}')`;
         console.log(createQ);

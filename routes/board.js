@@ -1,14 +1,15 @@
 var express = require('express');
 var router = express.Router();
 var imageupload = require('../helper/imageupload');
-var filemkdir = require('../helper/imagemkdir').filemkdir();
+var filemkdir = require('../helper/imagefile').filemkdir();
+var fileunlink = require('../helper/imagefile')
 const query = require('../models/board');
 
 router.get('/', function(req, res, next) {
     query.boardList().then(boardR=>{
         query.selectCommentAll().then(commentR=>{
             if(req.session.user !== undefined){
-                console.log(commentR);
+                //console.log(commentR);
                 res.render('boardlist', {
                     BoardContents: boardR.message,
                     comments:commentR.message,
@@ -29,28 +30,10 @@ router.get('/', function(req, res, next) {
     })
 });
 
-
-/*
-router.get('/', function(req, res, next) {
-    query.boardList().then(boardR=>{
-        if(req.session.user !== undefined){
-            res.render('boardlist', {
-                BoardContents: boardR.message,
-                userId: req.session.user.id,
-                name: req.session.user.name
-            });
-        }else{
-
-        }
-        }).catch(err=>{
-        res.send({message : err});
-    })
-});
- */
 router.post('/lookcomment',function (req,res,next) {
     query.selectComment({b_id : req.body.b_id}).then(commentR=>{
         if(req.session.user !== undefined){
-            console.log(commentR);
+            //console.log(commentR);
             res.render('boardlist', {
                 comments:commentR.message,
                 userId: req.session.user.id,
@@ -67,34 +50,6 @@ router.post('/lookcomment',function (req,res,next) {
     })
 })
 
-/*
-router.get('/list/:b_id',function (req,res) {
-    query.boardList()
-        .then(boardR=>{
-            query.selectComment({b_id: req.params.b_id}).then(commentR=>{
-                console.log(commentR.message);
-                if(req.session.user !== undefined){
-                    res.render('boardlist', {
-                        BoardContents : boardR.message,
-                        userId :req.session.user.id,
-                        comments:commentR.message,
-                        name: req.session.user.name
-                    });
-                }
-                else{
-                    res.render('boardlist', {
-                        boards : boardR.message, userId: 0, comments : commentR.message, name:0
-                    });
-                }
-            }).catch(err=>{
-                res.send({message : err});
-            })
-        }).catch(err=>{
-        res.send({message : err});
-    })
-});
-*/
-
 router.post('/comment', function(req,res){
     const commentInfo = {
         b_id: req.body.b_id,
@@ -104,7 +59,7 @@ router.post('/comment', function(req,res){
     }
     console.log(commentInfo);
     query.comment(commentInfo).then(message=>{
-        console.log(message);
+        //console.log(message);
         if(message.message.affectedRows ===1){
             res.send({
                 user_id : req.session.user.id, comment : req.body.comment,
@@ -127,8 +82,6 @@ router.get('/write', function (req,res,next) {
 
 //app.use('/users', express.static('uploads')); 정적파일조회
 router.post('/write',imageupload.single('image_path'), async (req,res,next)=>{
-    //res.send('Uploaded! : '+req.file); // object를 리턴함
-    console.log(req.files); // undefined
     console.log(req.file);
     try{
         const boardInfo ={
@@ -203,17 +156,61 @@ router.post('/delete', (req,res,next)=>{
     const deleteInfo ={
         b_id : req.body.b_id
     }
-    query.delete(deleteInfo)
+
+    query.boardRead(deleteInfo).then(read => {
+        if(read.result == true){
+            fileunlink.fileunlink(read.message[0].image_path);
+            query.delete(deleteInfo)
+                .then(result => {
+                    if(result.message.affectedRows === 1) {
+                        res.send({message : 'delete_sucess'});
+                    }else{
+                        res.send({message : 'delete_fail'});
+                    }
+                }).catch(err => {
+                res.json(err);
+            })
+        }else{
+            res.send({message : 'image_fail'});
+        }
+    }).catch(err =>{
+
+    });
+/*    query.delete(deleteInfo)
         .then(result => {
             if(result.message.affectedRows === 1){
-             res.send({message: "success"});
+
+
+                }).catch(err => {
+                    res.json(err);
+                })
             }else{
                 res.send({message: "fail"});
             }
         }).catch(err =>{
-        throw res.json(err);
-    });
+         res.json(err);
+   });*/
 });
+
+/*router.post('/delete', (req,res,next)=>{
+    const deleteInfo ={
+        b_id : req.body.b_id
+    }
+    query.delete(deleteInfo)
+        .then(result => {
+            if(result.message.affectedRows === 1){
+                query.boardRead(deleteInfo).then(read =>{
+                    fileunlink.fileunlink(read.message[0].image_path);
+                }).catch(err => {
+                    res.json(err);
+                })
+            }else{
+                res.send({message: "fail"});
+            }
+        }).catch(err =>{
+        res.json(err);
+    });
+});*/
 
 router.post('/updateComment', (req,res,next)=>{
     const updateInfo ={

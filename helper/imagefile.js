@@ -8,5 +8,13 @@ module.exports ={
                 fs.mkdirSync('uploads');
             }
         });
+    },
+    fileunlink:(data) =>{
+        fs.unlink('uploads/'+data,(err)=>{
+            if(err){
+                console.error(err);
+            }
+            console.log("img delete:"+data);
+        })
     }
 };
