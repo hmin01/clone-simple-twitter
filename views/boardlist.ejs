@@ -71,28 +71,87 @@
                 </th>
             </tr>
             <tr>
-                <input hidden="true" type="text" name ="b_id" value ='<%= post.b_id %>' id="b_id">
+                <input type="hidden" id ="b_id" name="b_id" value="<%=post.b_id%>">
+                <input type="hidden" id = "name" name="name" value="<%=post.name%>">
                 <td>
                     <textarea  wrap="hard" id="contents<%=post.b_id%>" name="contents" style="resize: none; width: 500px; height: 100px;"><%= post.contents %></textarea>
                     <img src="../uploads/<%=post.image_path%>" style= "width: 15%; height:15%"/>
                 </td>
-                <td>
-                    <input type="button" id ="lookcomment" name="lookcomment" value="댓글보기" b_id='<%=post.b_id%>'>
-                </td>
-                <td>
-                    <input type="hidden" id ="b_id" name="b_id" value="<%=post.b_id%>">
-                    <input type="hidden" id = "name" name="name" value="<%=post.name%>">
+            </tr>
+            <tr>
+                <th>
                     <input hidden="true" type="date" name="reg_date" id="reg_date">
                     <textarea wrap="hard" name="comment"  id="comment" style="resize:none; width:400px; height:100px; border:0;"></textarea>
                     <input type="button" value="댓글작성" name ="commentsubmit" id="commentsubmit" style="margin-top: 10px">
-                </td>
-
+                </th>
             </tr>
+        <% }) %>
+        <tr>
+            <% comments.forEach(function(comment){ %>
+            <td>
+                <input type="hidden" id="com_id", name ="come_id" , value="<%=comment.com_id%>">
+                <textarea  id="upcomment<%=comment.com_id%>" name="upcomment" style="resize: none; width: 50%; border:0; height: 50px;white-space: pre;"><%= comment.contents %></textarea>
+
+                <input  type="button" id="comment_delete" value="delete" com_id ='<%=comment.com_id%>'>
+                <input  type="button" name="updateComment" value="update" id="updateComment" com_id ='<%=comment.com_id%>'>
+                <div><%=comment.name%> (<%= comment["date_format(comment.reg_date, '%Y-%m-%d %h:%i:%s')"]%>)</div>
+                <div> <%= comment.contents%></div>
+            </td>
+        </tr>
+        <%})%>
     </table>
-    <% }) %>
+
 </form>
     </div>
 </div>
+<script>
+    $(document).on('click','#updateComment',function () {
+        if(confirm('수정하시겠습니까?')) {
+            var $conn = $(this);
+            var updateCommentId = "#upcomment"+$conn.attr('com_id');
+            alert(updateCommentId);
+            $.ajax({
+                url: '/board/updateComment',
+                type: 'POST',
+                async: false,
+                dataType: 'json',
+                data: {
+                    upcomment: $(updateCommentId).val(),
+                    com_id: $conn.attr('com_id'),
+                },
+                success: function (data, status, xhr) {
+                    $conn.parent().remove();
+                    location.reload();
+                },
+                error: function (err) {
+                }
+            })
+        }
+    });
+</script>
+<script>
+    $(document).on('click','#comment_delete',function () {
+        if(confirm('삭제하시겠습니까?')) {
+            var $conn = $(this);
+            $.ajax({
+                url: '/board/deletecomment',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    com_id: $conn.attr('com_id')
+                },
+                success: function (data) {
+                    console.log(data);
+                    $conn.parent().remove();
+                    alert("삭제되었습니다");
+                },
+                error: function (err) {
+                }
+            })
+        }
+    })
+</script>
+
 <script>
     $(document).on('click','#lookcomment',function () {
         if(confirm('댓글을 보시겠습니까?')) {

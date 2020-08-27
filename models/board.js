@@ -31,6 +31,10 @@ module.exports = {
         const createQ = `select user.id, user.name, comment.com_id, comment.b_id, date_format(comment.reg_date, '%Y-%m-%d %h:%i:%s'), comment.user_id, COMMENT.contents from COMMENT inner join user on comment.user_id = user.id where b_id = '${data.b_id}' ORDER BY comment.reg_date DESC`;
         return await query.querySync(createQ);
     },
+    selectCommentAll : async () =>{
+        const createQ = `select user.id, user.name, comment.com_id, comment.b_id, date_format(comment.reg_date, '%Y-%m-%d %h:%i:%s'), comment.user_id, COMMENT.contents from COMMENT inner join user on comment.user_id = user.id where b_id = b_id ORDER BY comment.reg_date DESC`;
+        return await query.querySync(createQ);
+    },
     deleteComment : async(data) =>{
         const deleteContentQ = `DELETE FROM comment WHERE com_id ='${data.com_id}'`;
         console.log(deleteContentQ);
@@ -38,9 +42,9 @@ module.exports = {
     },
     updateComment : async(data) =>{
         //세션이 일치하는 것을 조회
-        const updateMyComment = `UPDATE comment SET CONTENT = '${data.upcomment}',reg_date, "%Y-%m-%d %h:%i:%s") = NOW()  where com_id = '${data.com_id}'`;
+        const updateMyComment = `UPDATE comment SET contents = '${data.upcomment}',reg_date = NOW()  where com_id = '${data.com_id}'`;
         console.log(updateMyComment)
-        return await query.querySync(updateMyContents);
+        return await query.querySync(updateMyComment);
     },
     updateCommentscomment : async (data) =>{
         const updateCommentscomment = `SELECT  com_id ,CONTENT, date_format(mod_date, "%Y-%m-%d %h:%i:%s") FROM comment WHERE com_id = '${data.com_id}'`;

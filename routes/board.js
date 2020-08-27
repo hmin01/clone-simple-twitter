@@ -6,6 +6,33 @@ const query = require('../models/board');
 
 router.get('/', function(req, res, next) {
     query.boardList().then(boardR=>{
+        query.selectCommentAll().then(commentR=>{
+            if(req.session.user !== undefined){
+                console.log(commentR);
+                res.render('boardlist', {
+                    BoardContents: boardR.message,
+                    comments:commentR.message,
+                    userId: req.session.user.id,
+                    name: req.session.user.name
+                });
+            }
+            else{
+                res.render('boardlist', {
+                    BoardContents: boardR.message, userId: 0, comments : commentR.message, name:0
+                });
+            }
+        }).catch(err=>{
+            res.send({message : err});
+        })
+        }).catch(err=>{
+        res.send({message : err});
+    })
+});
+
+
+/*
+router.get('/', function(req, res, next) {
+    query.boardList().then(boardR=>{
         if(req.session.user !== undefined){
             res.render('boardlist', {
                 BoardContents: boardR.message,
@@ -19,7 +46,7 @@ router.get('/', function(req, res, next) {
         res.send({message : err});
     })
 });
-
+ */
 router.post('/lookcomment',function (req,res,next) {
     query.selectComment({b_id : req.body.b_id}).then(commentR=>{
         if(req.session.user !== undefined){
@@ -68,8 +95,6 @@ router.get('/list/:b_id',function (req,res) {
 });
 */
 
-
-
 router.post('/comment', function(req,res){
     const commentInfo = {
         b_id: req.body.b_id,
@@ -90,23 +115,6 @@ router.post('/comment', function(req,res){
         throw err;
     })
 })
-
-/*
-router.post('/deletecomment', function(req,res){
-    console.log({comment_id: req.body.comment_id});
-    query.deleteComment({comment_id: req.body.comment_id}).then(result=>{
-        if(result.message.affectedRows === 1){
-            res.send({message: "success"});
-        }else{
-            res.send({message: "fail"});
-        }
-    }).catch(err =>{
-        throw err;
-    })
-})
-*/
-
-
 
 
 router.get('/board', function (req,res,next) {
@@ -207,4 +215,36 @@ router.post('/delete', (req,res,next)=>{
     });
 });
 
+router.post('/updateComment', (req,res,next)=>{
+    const updateInfo ={
+        com_id : req.body.com_id,
+        upcomment : req.body.upcomment
+    }
+    query.updateComment(updateInfo)
+        .then(_result => {
+            console.log(_result);
+            if(_result.message.affectedRows == 1){
+                query.updateCommentscomment(updateInfo).then(result => {
+                    res.send({result: result.message[0]});
+                });
+            }else{
+                res.send({message: "fail"});
+            }
+        }).catch(err =>{
+        res.send({message: err});
+    });
+});
+
+router.post('/deletecomment', function(req,res){
+    console.log({com_id: req.body.com_id});
+    query.deleteComment({com_id: req.body.com_id}).then(result=>{
+        if(result.message.affectedRows === 1){
+            res.send({message: "success"});
+        }else{
+            res.send({message: "fail"});
+        }
+    }).catch(err =>{
+        throw err;
+    })
+})
 module.exports = router;
