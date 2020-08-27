@@ -1,42 +1,25 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
-    <title>twitterHome</title>
+    <%- include('./partials/head.ejs') %>
+    <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
 </head>
+<style>
+    form{
+        text-align: center;
+    }
+</style>
 <body>
-<form method="GET">
-<h1>homepage</h1>
-    <input id = "btn_login" name ="login" value = "login" type ="button"/>
-    <input id = "btn_register" name ="register" value="register" type ="button"/>
-</form>
-<script>
-    $("#btn_login").click(function(){
-        $.ajax({
-            url: '/users/login',
-            type: 'GET',
-            success: function () {
-                location.href="/users/login";
-            },
-            error: function (err) {
-            }
-        })
-    });
-</script>
+<%- include('./partials/nav.ejs') %>
 
-<script>
-    $("#btn_register").click(function(){
-        $.ajax({
-            url: '/users/register',
-            type: 'GET',
-            success: function () {
-                location.href="/users/register";
-            },
-            error: function (err) {
-            }
-        })
-    });
-</script>
 
+<div class="container mb-3">
+
+    <div class="jumbotron">
+        <form method="GET">
+            <h1>homepage</h1>
+        </form>
+    </div>
+</div>
 </body>
 </html>

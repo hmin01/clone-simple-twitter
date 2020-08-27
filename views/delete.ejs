@@ -1,23 +1,35 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+    <%- include('./partials/head.ejs') %>
     <meta charset="UTF-8">
     <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
     <title>프로필</title>
 </head>
+<style>
+    form{
+        text-align: center;
+    }
+    body {
+        text-align: center;
+    }
+</style>
 <body>
-<h3>회원탈퇴</h3>
-<form method="post">
-    <table>
-        <tr>
-            <td>비밀번호 입력: </td>
-            <td><input type="password" name="password" id ="password"></td>
-        </tr>
-        <tr>
-            <td><input type="submit" id ="delete" value="삭제"></td>
-        </tr>
-    </table>
-</form>
+<%- include('./partials/nav.ejs') %>
+<div class="container mb-3">
+    <div class="jumbotron">
+        <h3>회원탈퇴</h3>
+        <form method="post">
+            <table style="margin-left: auto; margin-right: auto;">
+                <tr>
+                    <td>비밀번호 입력: </td>
+                    <th><input type="password" name="password" id ="password"></th>
+                    <th><input type="submit" id ="delete" value="삭제"></th>
+                </tr>
+            </table>
+        </form>
+    </div>
+</div>
 <script>
     $("#delete").submit(function(){
         $.ajax({
@@ -29,10 +41,12 @@
                 password:$('#password').val()
             },
             success: function (data) {
-                alert("성공");
-                location.href='/';
+                alert("삭제처리 되었습니다.");
+                location.href='/'
             },
             error: function (err) {
+                alert("비밀번호가 맞지않습니다.");
+                location.reload();
             }
         });
     });

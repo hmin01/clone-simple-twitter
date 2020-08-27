@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <%- include('./partials/head.ejs') %>
+    <meta charset="UTF-8">
+    <script src="//code.jquery.com/jquery-2.1.1.min.js"></script>
+    <title>board</title>
+</head>
+<style>
+    table {
+        width: 60%;
+        height: 100px;
+        border: 1px solid #444444;
+        text-align: center;
+    }
+    td {
+        border: 1px solid #444444;
+    }
+    form{
+        text-align: center;
+    }
+</style>
+<body>
+<%- include('./partials/nav_l.ejs') %>
+<h3>Board</h3>
+<div class="container mb-3">
+    <div class="jumbotron">
+<form id="writefrom" name="writefrom" method="POST" enctype="multipart/form-data">
+    <table style="margin-left: auto; margin-right: auto;">
+        <tr>
+            <td><textarea wrap="hard" id="contentswrite" name="contentswrite" style="resize: none; width: 500px; height: 100px;  "></textarea></td>
+        </tr>
+        <td><input type="file" id="image_path" name="image_path"><input type="submit" id="write" value="write" name="write" formaction="/board/write"></td>
+    </table>
+</form>
+<script>
+    $(document).ready(function () {
+        $("#write").submit(function () {
+            $.ajax({
+                url: '/board/write',
+                type: 'POST',
+                async: true,
+                dataType: 'json',
+                enctype: "multipart/form-data",
+                data: {
+                    contentswrite : $('#contentswrite').val(),
+                    image_path : $('#image_path').val(),
+                },
+                success: function (data) {
+                    alert("글쓰기를 완료했습니다.");
+                    location.reload();
+                },
+                error: function (err) {
+                }
+            });
+        });
+    });
+</script>
+
+<form id ="form" name = "form" method="post">
+    <% BoardContents.forEach(function(post) { %>
+    <div>
+        <table style="margin-left: auto; margin-right: auto;">
+            <tr>
+                <th>
+                    <%=post.name%> <%=post["date_format(board.mod_date, '%Y-%m-%d %h:%i:%s')"]%>
+                    <!-- <%if(post.id == userId){%> -->
+                    <input type="button" id ="update" name="update" value="수정" b_id='<%=post.b_id%>'>
+                    <input type="button" id ="delete" name="delete" value="delete" b_id='<%=post.b_id%>'>
+                    <!-- <%}%> -->
+                </th>
+            </tr>
+            <tr>
+                <input hidden="true" type="text" name ="b_id" value ='<%= post.b_id %>' id="b_id">
+                <td>
+                    <textarea  wrap="hard" id="contents<%=post.b_id%>" name="contents" style="resize: none; width: 500px; height: 100px;"><%= post.contents %></textarea>
+                    <img src="../uploads/<%=post.image_path%>" style= "width: 15%; height:15%"/>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+</form>
+        <form id="commentForm" method="post">
+            <input type="hidden" id ="b_id" name="b_id" value="<%=post.b_id%>">
+            <input type="hidden" id = "name" name="name" value="<%=post.name%>">
+            <input hidden="true" type="date" name="reg_date" id="reg_date">
+            <textarea wrap="hard" name="comment"  style="resize:none; width:400px; height:100px; border:0;"></textarea>
+            <input type="submit" value="댓글작성" name ="submit" style="margin-top: 10px">
+        </form>
+        <% }) %>
+        <form>
+            <div id="comment_area">
+                <% comments.forEach(function(comment){ %>
+                <input type="hidden" id="c_id" name="c_id" value="<%=comment.com_id%>">
+                <div class="a">
+                    <div><%=comment.name%> (<%= comment["date_format(comments.reg_date, '%Y-%m-%d %h:%i:%s')"]%>)</div>
+                    <div> <%= comment.contents%></div>
+                    <%if(userId === comment.u_id){%>
+                    <textarea  id="upcomment<%=comment.c_id%>" name="upcomment" style="resize: none; width: 50%; border:0; height: 50px;white-space: pre;"><%= comment.contents %></textarea>
+                    <input  type="button" id="comment_delete" value="delete" comment_id ='<%=comment.com_id%>'>
+                    <input  type="button" name="updateComment" value="update" id="updateComment" comment_id ='<%=comment.com_id%>'>
+                    <%}%>
+                </div>
+                <%})%>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    const datetime = new Date();
+    document.getElementById("reg_date").value = datetime.getFullYear() + "-" + datetime.getMonth()+1 + "-" + datetime.getDay()+"  "+datetime.getHours() +":"+datetime.getMinutes() +":"+datetime.getSeconds();
+    (function(){
+        $(document).ready(function() {
+            $('#commentForm').submit(function(){
+                var $comment =  $(this).children('textarea[name=comment]').val();
+                if($comment){
+                    $.ajax({
+                        url: '/board/comment',
+                        type: 'POST',
+                        data: $(this).serialize(),
+                        success : (function(data) {
+                            console.log(data);
+                            $('#comment_area').append(
+                                '<div>' + data.name +'('+data.reg_date  +')'+'</div>'+
+                                '<div>' + data.comment + '</div>');
+                            $('#commentForm textarea[name=comment]').val("");
+                            alert('댓글작성이 완료되었습니다.');
+                            //location.reload();
+                        }),
+                        error : (function(err) {
+                        })
+                    })
+                }else{
+                    alert('댓글 내용을 입력해주세요.')
+                }
+                return false;
+            });
+        });
+    })();
+</script>
+
+<script type="javascript">
+    function Check(form) {
+        if (form.contents.disabled == true && form.update.hidden == true){
+            form.contents.disabled = false
+            form.update.hidden = false;
+        }
+        else{
+            form.contents.disabled=true
+            form.update.hidden=true;
+        }
+    }
+</script>
+<script>
+    $(document).on('click','#update',function () {
+        if(confirm('수정하시겠습니까?')) {
+            var $conn = $(this);
+            var updatecontent = "#contents"+$conn.attr('b_id');
+            $.ajax({
+                url: '/board/update',
+                type: 'POST',
+                async: false,
+                dataType: 'json',
+                data: {
+                    b_id: $conn.attr('b_id'),
+                    contents: $(updatecontent).val(),
+                },
+                success: function (data) {
+                    alert("글쓰기를 수정완료 했습니다.");
+                    location.reload();
+                },
+                error: function (err) {
+                    alert("글이 없습니다.");
+                    location.reload();
+                }
+            });
+        }
+    });
+</script>
+<script>
+        $(document).on('click', '#delete', function () {
+            if(confirm('삭제하시겠습니까?')) {
+                var $conn = $(this);
+                $.ajax({
+                    url: '/board/delete',
+                    type: 'POST',
+                    async: false,
+                    dataType: 'json',
+                    data: {
+                        b_id: $conn.attr('b_id')
+                    },
+                    success: function (data) {
+                        $conn.parent().remove();
+                        alert("삭제되었습니다");
+                        location.reload()
+                    },
+                    error: function (err) {
+                        alert("삭제되지않았습니다.");
+                        location.reload()
+                    }
+                })
+            }
+    });
+</script>
+</body>
+</html>

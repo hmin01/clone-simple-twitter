@@ -43,7 +43,7 @@
                 </tr>
                 <tr>
                     <td><input type ="submit" value="수정" id = "update"></td>
-                    <td><a href="./delete">회원탈퇴바로가기</a></td>
+                    <td><a href="/users/delete">회원탈퇴바로가기</a></td>
                 </tr>
             </table>
         </form>
@@ -52,12 +52,12 @@
 <script>
     $("#update").submit(function(){
         $.ajax({
-            url:'./profile',//주
+            url:'/users/profile',//주
             type: 'POST',
             async: false,
             success: function (data) {
                 alert("성공");
-                location.href ='./update'
+                location.href ='/users/update'
             },
             error: function (err) {
             }

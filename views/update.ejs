@@ -21,14 +21,14 @@
     <div class="jumbotron">
         <h3>회원정보수정</h3>
         <form method="post">
-            <table>
+            <table style="margin-left: auto; margin-right: auto;">
                 <tr>
                     <td>이름 : </td>
                     <td><input type="name" value ="<%=name%>" name="name"></td>
                 </tr>
                 <tr>
                     <td>전화 번호 : </td>
-                    <td><input type="text" value ="<%=phonenumber%>" onKeyup="inputPhoneNumber(this)" maxlength="13" name="phonenumber"></td>
+                    <td><input type="text" value ="<%=phonenumber%>" onKeyup="inputPhoneNumber(this)" minlength="13" maxlength="13" name="phonenumber"></td>
                 </tr>
                 <tr>
                     <td><input type="submit" id ="update" value="수정"></td>
@@ -58,10 +58,8 @@
 </script>
 <script>
     function inputPhoneNumber(obj) {
-
         var number = obj.value.replace(/[^0-9]/g, "");
         var phone = "";
-
         if(number.length < 4) {
             return number;
         } else if(number.length < 7) {
