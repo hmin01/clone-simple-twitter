@@ -10,11 +10,15 @@ module.exports = {
         return await query.selectSync(selectQ);
     },
     update: async (data) => {
-        const selectQ =`update board set contents = '${data.contents}' where b_id = '${data.b_id}'`;
+        const selectQ =`update board set contents = '${data.contents}', image_path='${data.newimage_path}' where b_id = '${data.b_id}'`;
+        return await query.querySync(selectQ);
+    },
+    updateimage: async (data) => {
+        const selectQ =`update board set image_path='${data.new_image_path}' where b_id = '${data.b_id}'`;
         return await query.querySync(selectQ);
     },
     updateselect: async (data) => {
-        const selectQ =`SELECT contents from board  where b_id = '${data.b_id}'`;
+        const selectQ =`SELECT * from board  where b_id = '${data.b_id}'`;
         return await query.selectSync(selectQ);
     },
     delete: async (data) => {

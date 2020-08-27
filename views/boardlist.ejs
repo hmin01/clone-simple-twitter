@@ -57,17 +57,20 @@
     });
 </script>
 
-<form id ="form" name = "form" method="post">
+<form id ="form" name = "form" method="post" enctype="multipart/form-data">
     <% BoardContents.forEach(function(post) { %>
 
     <table style="margin-left: auto; margin-right: auto;">
             <tr>
                 <th>
                     <%=post.name%> <%=post["date_format(board.mod_date, '%Y-%m-%d %h:%i:%s')"]%>
-                    <!-- <%if(post.id == userId){%> -->
+                    <%if(post.id == userId){%>
+
                     <input type="button" id ="update" name="update" value="수정" b_id='<%=post.b_id%>'>
                     <input type="button" id ="delete" name="delete" value="delete" b_id='<%=post.b_id%>'>
-                    <!-- <%}%> -->
+                    <input type="submit" id ="imgupdate" name="imgupdate" value="그림수정" b_id='<%=post.b_id%>' formaction="/board/imgupdate">
+                    <input type="file" id="new_image_path" name="new_image_path">
+                    <%}%>
                 </th>
             </tr>
             <tr>
@@ -107,6 +110,30 @@
 </form>
     </div>
 </div>
+<script>
+    $(document).ready(function () {
+            $('#imgupdate').submit(function () {
+                var $conn = $(this);
+                $.ajax({
+                    url: '/board/imgupdate',
+                    type: 'POST',
+                    async: true,
+                    dataType: 'json',
+                    enctype: "multipart/form-data",
+                    data: {
+                        b_id: $conn.attr('b_id'),
+                        new_image_path: $('#new_image_path').val()
+                    },
+                    success: function (data) {
+                        location.reload();
+                    },
+                    error: function (err) {
+                    }
+                });
+            });
+    });
+</script>
+
 <script>
     $(document).on('click','#updateComment',function () {
         if(confirm('수정하시겠습니까?')) {

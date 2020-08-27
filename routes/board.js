@@ -128,6 +128,57 @@ router.get('/update', function (req,res,next) {
 
 });
 
+router.post('/imgupdate',imageupload.single('new_image_path') ,async(req,res,next)=>{
+    //res.send({file:req.file});
+    const updateimage ={
+        b_id : req.body.b_id,
+        new_image_path : (req.file) ? req.file.filename : "",
+    }
+    console.log(updateimage);
+    query.boardRead({b_id : req.body.b_id}).then(read =>{
+        if(read.result == true){
+            fileunlink.fileunlink(read.message[0].image_path);
+            query.updateimage(updateimage)
+                .then(_result => {
+                    if(_result.message.affectedRows == 1){
+                        query.updateselect(updateimage).then(result => {
+                            console.log(result.message[0]);
+                            //res.send({result: result.message[0]});
+                            res.send('<script>alert("성공");location.href="./";</script>');
+                        });
+                    }else{
+                        res.send({message: "fail"});
+                    }
+                }).catch(err =>{
+                res.send({message: err});
+            });
+
+        }else{
+            res.send({message : 'image_fail'});
+        }
+    })
+})
+
+router.post('/update',(req,res,next)=>{
+    const updateInfo ={
+        b_id : req.body.b_id,
+        contents : req.body.contents,
+    }
+    query.update(updateInfo)
+        .then(_result => {
+            if(_result.message.affectedRows == 1){
+                query.updateselect(updateInfo).then(result => {
+                    console.log(result.message[0]);
+                    res.send({result: result.message[0]});
+                });
+            }else{
+                res.send({message: "fail"});
+            }
+        }).catch(err =>{
+        res.send({message: err});
+    });
+});
+/*
 router.post('/update', (req,res,next)=>{
     const updateInfo ={
         b_id : req.body.b_id,
@@ -147,6 +198,7 @@ router.post('/update', (req,res,next)=>{
             res.send({message: err});
     });
 });
+ */
 
 router.get('/delete', function (req,res,next) {
 
