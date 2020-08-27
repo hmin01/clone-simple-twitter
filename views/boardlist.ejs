@@ -85,10 +85,11 @@
                     <input type="button" value="댓글작성" name ="commentsubmit" id="commentsubmit" style="margin-top: 10px">
                 </th>
             </tr>
-        <% }) %>
+
         <tr>
             <% comments.forEach(function(comment){ %>
             <td>
+                <% if(post.b_id === comment.b_id ) {%>
                 <input type="hidden" id="com_id", name ="come_id" , value="<%=comment.com_id%>">
                 <textarea  id="upcomment<%=comment.com_id%>" name="upcomment" style="resize: none; width: 50%; border:0; height: 50px;white-space: pre;"><%= comment.contents %></textarea>
 
@@ -97,8 +98,10 @@
                 <div><%=comment.name%> (<%= comment["date_format(comment.reg_date, '%Y-%m-%d %h:%i:%s')"]%>)</div>
                 <div> <%= comment.contents%></div>
             </td>
+            <%}%>
         </tr>
         <%})%>
+        <% }) %>
     </table>
 
 </form>
